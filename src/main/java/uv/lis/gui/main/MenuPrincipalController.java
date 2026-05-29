@@ -30,14 +30,14 @@ public class MenuPrincipalController {
             miUsuarios.setDisable(true);
         }
         // Cargar dashboard por defecto
-        cargarVista("/uv/lis/italia_pizza/gui/pedidos/Pedidos.fxml");
+        cargarVista("/uv/lis/gui/pedidos/Pedidos.fxml");
     }
 
-    @FXML private void onUsuarios()  { cargarVista("/uv/lis/italia_pizza/gui/usuarios/Usuarios.fxml"); }
-    @FXML private void onProductos() { cargarVista("/uv/lis/italia_pizza/gui/productos/Productos.fxml"); }
-    @FXML private void onPedidos()   { cargarVista("/uv/lis/italia_pizza/gui/pedidos/Pedidos.fxml"); }
-    @FXML private void onInventario(){ cargarVista("/uv/lis/italia_pizza/gui/inventario/Inventario.fxml"); }
-    @FXML private void onValidarInv(){ cargarVista("/uv/lis/italia_pizza/gui/inventario/ValidarInventario.fxml"); }
+    @FXML private void onUsuarios()  { cargarVista("/uv/lis/gui/usuarios/Usuarios.fxml"); }
+    @FXML private void onProductos() { cargarVista("/uv/lis/gui/productos/Productos.fxml"); }
+    @FXML private void onPedidos()   { cargarVista("/uv/lis/gui/pedidos/Pedidos.fxml"); }
+    @FXML private void onInventario(){ cargarVista("/uv/lis/gui/inventario/Inventario.fxml"); }
+    @FXML private void onValidarInv(){ cargarVista("/uv/lis/gui/inventario/ValidarInventario.fxml"); }
 
     @FXML
     private void onAcercaDe() {
@@ -55,7 +55,7 @@ public class MenuPrincipalController {
             Sesion.getInstance().cerrar();
             try {
                 Parent root = FXMLLoader.load(
-                    getClass().getResource("/uv/lis/italia_pizza/gui/login/Login.fxml"));
+                    getClass().getResource("/uv/lis/gui/login/Login.fxml"));
                 Stage stage = (Stage) rootPane.getScene().getWindow();
                 stage.setScene(new Scene(root));
                 stage.setMaximized(false);

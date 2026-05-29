@@ -100,7 +100,7 @@ public class ProductosController {
     private void abrirForm(Producto producto) {
         try {
             FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/uv/lis/italia_pizza/gui/productos/FormProducto.fxml"));
+                getClass().getResource("/uv/lis/gui/productos/FormProducto.fxml"));
             Parent root = loader.load();
             FormProductoController ctrl = loader.getController();
             ctrl.setProducto(producto);

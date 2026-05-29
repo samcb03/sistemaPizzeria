@@ -115,7 +115,7 @@ public class PedidosController {
     private void abrirDetalle(Pedido pedido) {
         try {
             FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/uv/lis/italia_pizza/gui/pedidos/DetallePedido.fxml"));
+                getClass().getResource("/uv/lis/gui/pedidos/DetallePedido.fxml"));
             Parent root = loader.load();
             DetallePedidoController ctrl = loader.getController();
             ctrl.setPedido(pedido);
@@ -132,7 +132,7 @@ public class PedidosController {
     private void abrirCambioEstatus(Pedido pedido) {
         try {
             FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/uv/lis/italia_pizza/gui/pedidos/CambiarEstatus.fxml"));
+                getClass().getResource("/uv/lis/gui/pedidos/CambiarEstatus.fxml"));
             Parent root = loader.load();
             CambiarEstatusController ctrl = loader.getController();
             ctrl.setPedido(pedido);

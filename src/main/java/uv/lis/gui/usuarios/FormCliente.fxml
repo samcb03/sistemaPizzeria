@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="uv.lis.gui.usuarios.FormClienteController"
+      spacing="14" prefWidth="480"
+      style="-fx-background-color: white; -fx-padding: 28;">
+
+    <Label fx:id="lblTitulo" text="Nuevo Cliente"
+           style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1A1B1E;"/>
+    <Separator/>
+
+    <GridPane hgap="12" vgap="10">
+        <Label text="Nombre *"            GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtNombre"      GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="200"/>
+        <Label text="Ap. Paterno *"        GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtApPat"       GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        <Label text="Ap. Materno *"        GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtApMat"       GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        <Label text="Ciudad *"             GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtCiudad"      GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+        <Label text="Teléfono *"           GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtTelefono"    GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+        <Label text="Email *"              GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtEmail"       GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+        <Label text="Calle y Número *"     GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtCalleNum"    GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+        <Label text="Colonia *"            GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtColonia"     GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+        <Label text="Código Postal *"      GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtCP"          GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <Label fx:id="lblError" style="-fx-text-fill: #C82429;" wrapText="true"/>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Cancelar" onAction="#onCancelar"
+                style="-fx-background-color: #F3F5F8; -fx-border-color: #E2E5EB; -fx-background-radius: 8;"/>
+        <Button text="Guardar" onAction="#onGuardar"
+                style="-fx-background-color: #C82429; -fx-text-fill: white; -fx-background-radius: 8; -fx-cursor: hand;"/>
+    </HBox>
+</VBox>

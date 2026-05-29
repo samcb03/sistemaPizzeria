@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+
+<HBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="uv.lis.gui.login.LoginController"
+      prefWidth="900" prefHeight="580"
+      style="-fx-background-color: #F3F5F8;">
+
+    <!-- Panel izquierdo — marca -->
+    <VBox prefWidth="380" alignment="CENTER" spacing="16"
+          style="-fx-background-color: #C82429; -fx-padding: 40;">
+        <Label text="🍕" style="-fx-font-size: 64px;"/>
+        <Label text="Italia Pizza"
+               style="-fx-font-size: 32px; -fx-text-fill: white; -fx-font-weight: bold;"/>
+        <Label text="Sistema de Administración"
+               style="-fx-font-size: 14px; -fx-text-fill: #FFCCCC;"/>
+        <Separator style="-fx-background-color: rgba(255,255,255,0.3);" prefWidth="200"/>
+        <Label text="Gestión de pedidos, productos&#10;y usuarios en un solo lugar."
+               style="-fx-font-size: 13px; -fx-text-fill: white; -fx-text-alignment: center;"
+               wrapText="true" textAlignment="CENTER"/>
+        <Region VBox.vgrow="ALWAYS"/>
+        <Label text="FEI-UV • 2025"
+               style="-fx-font-size: 11px; -fx-text-fill: rgba(255,255,255,0.6);"/>
+    </VBox>
+
+    <!-- Panel derecho — formulario -->
+    <VBox prefWidth="520" alignment="CENTER" spacing="14"
+          style="-fx-background-color: white; -fx-padding: 60 80 60 80;">
+
+        <Label text="Bienvenido"
+               style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #1A1B1E;"/>
+        <Label text="Inicia sesión para continuar"
+               style="-fx-font-size: 14px; -fx-text-fill: #999FAB;"/>
+
+        <Region prefHeight="10"/>
+
+        <VBox spacing="6">
+            <Label text="Usuario" style="-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #4F5561;"/>
+            <TextField fx:id="txtUsuario" promptText="Nombre de usuario"
+                       style="-fx-background-color: #F3F5F8; -fx-border-color: #E2E5EB; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 10 14; -fx-font-size: 14px;"
+                       prefHeight="42"/>
+        </VBox>
+
+        <VBox spacing="6">
+            <Label text="Contraseña" style="-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #4F5561;"/>
+            <PasswordField fx:id="txtContrasena" promptText="••••••••"
+                           style="-fx-background-color: #F3F5F8; -fx-border-color: #E2E5EB; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 10 14; -fx-font-size: 14px;"
+                           prefHeight="42"/>
+        </VBox>
+
+        <Label fx:id="lblError"
+               style="-fx-text-fill: #C82429; -fx-font-size: 12px; -fx-background-color: #FEEDED; -fx-padding: 8 12; -fx-background-radius: 6;"
+               prefWidth="360" wrapText="true"/>
+
+        <Button fx:id="btnIngresar" text="Iniciar Sesión"
+                onAction="#onIngresar"
+                prefWidth="360" prefHeight="44"
+                defaultButton="true"
+                style="-fx-background-color: #C82429; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand;"/>
+
+        <Label text="Solo empleados autorizados pueden acceder."
+               style="-fx-font-size: 12px; -fx-text-fill: #999FAB;" wrapText="true"
+               textAlignment="CENTER" prefWidth="360"/>
+    </VBox>
+</HBox>

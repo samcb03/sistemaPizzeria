@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="uv.lis.gui.main.MenuPrincipalController"
+            fx:id="rootPane"
+            prefWidth="1280" prefHeight="800"
+            style="-fx-background-color: #F3F5F8;">
+
+    <!-- MENU BAR -->
+    <top>
+        <VBox>
+            <MenuBar style="-fx-background-color: #1A1B1E; -fx-padding: 2 0;">
+                <!-- Logo -->
+                <Menu text="🍕 Italia Pizza" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;" disable="true"/>
+
+                <Menu text="Administración" style="-fx-text-fill: white;">
+                    <MenuItem fx:id="miUsuarios" text="👥  Usuarios"    onAction="#onUsuarios"/>
+                    <SeparatorMenuItem/>
+                    <MenuItem fx:id="miCerrarSesion" text="🔒  Cerrar Sesión" onAction="#onCerrarSesion"/>
+                </Menu>
+
+                <Menu text="Inventarios" style="-fx-text-fill: white;">
+                    <MenuItem text="🍕  Productos"           onAction="#onProductos"/>
+                    <MenuItem text="📦  Reporte de Inventario" onAction="#onInventario"/>
+                    <MenuItem text="✔   Validar Inventario"   onAction="#onValidarInv"/>
+                </Menu>
+
+                <Menu text="Pedidos" style="-fx-text-fill: white;">
+                    <MenuItem text="📋  Pedidos" onAction="#onPedidos"/>
+                </Menu>
+
+                <Menu text="Ayuda" style="-fx-text-fill: white;">
+                    <MenuItem text="ℹ   Acerca de" onAction="#onAcercaDe"/>
+                </Menu>
+
+                <!-- Spacer + usuario -->
+                <Menu text="" disable="true" style="-fx-padding: 0 0 0 600;"/>
+                <Menu disable="true">
+                    <graphic>
+                        <HBox spacing="8" alignment="CENTER_LEFT" style="-fx-padding: 0 12;">
+                            <Label fx:id="lblUsuario" text="Empleado"
+                                   style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px;"/>
+                            <Label text="|" style="-fx-text-fill: #555;"/>
+                            <Label fx:id="lblRol" text="Rol"
+                                   style="-fx-text-fill: #AAAAAA; -fx-font-size: 12px;"/>
+                        </HBox>
+                    </graphic>
+                </Menu>
+            </MenuBar>
+        </VBox>
+    </top>
+
+    <!-- CONTENT se carga dinámicamente -->
+    <center>
+        <StackPane style="-fx-background-color: #F3F5F8; -fx-padding: 16;">
+            <Label text="Selecciona una opción del menú para comenzar."
+                   style="-fx-font-size: 15px; -fx-text-fill: #999FAB;"/>
+        </StackPane>
+    </center>
+</BorderPane>

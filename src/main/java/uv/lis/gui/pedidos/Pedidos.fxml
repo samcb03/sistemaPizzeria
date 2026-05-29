@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="uv.lis.gui.pedidos.PedidosController"
+      spacing="12" style="-fx-background-color: #F3F5F8; -fx-padding: 20;">
+
+    <Label text="Gestión de Pedidos"
+           style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #1A1B1E;"/>
+
+    <HBox spacing="10" alignment="CENTER_LEFT"
+          style="-fx-background-color: white; -fx-padding: 12; -fx-background-radius: 10;">
+        <Label text="Fecha:"/>
+        <DatePicker fx:id="dpFecha" prefHeight="36"/>
+        <Label text="Estatus:"/>
+        <ComboBox fx:id="cbEstatus" prefHeight="36" prefWidth="140"/>
+        <Button text="🔍 Buscar" onAction="#onBuscar" prefHeight="36"
+                style="-fx-background-color: #C82429; -fx-text-fill: white; -fx-background-radius: 8; -fx-cursor: hand;"/>
+        <Button text="✖ Limpiar" onAction="#onLimpiar" prefHeight="36"
+                style="-fx-background-color: #F3F5F8; -fx-border-color: #E2E5EB; -fx-background-radius: 8; -fx-cursor: hand;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="📄 Exportar CSV" onAction="#onExportarCSV" prefHeight="36"
+                style="-fx-background-color: #F3F5F8; -fx-border-color: #E2E5EB; -fx-background-radius: 8; -fx-cursor: hand;"/>
+        <Button text="+ Nuevo Pedido" onAction="#onNuevoPedido" prefHeight="36"
+                style="-fx-background-color: #C82429; -fx-text-fill: white; -fx-background-radius: 8; -fx-cursor: hand;"/>
+    </HBox>
+
+    <TableView fx:id="tblPedidos" VBox.vgrow="ALWAYS"
+               style="-fx-background-color: white; -fx-background-radius: 10;">
+        <columns>
+            <TableColumn fx:id="colId"      text="#"            prefWidth="70"/>
+            <TableColumn fx:id="colCliente" text="Cliente"      prefWidth="220"/>
+            <TableColumn fx:id="colEstatus" text="Estatus"      prefWidth="120"/>
+            <TableColumn fx:id="colTipo"    text="Tipo"         prefWidth="120"/>
+            <TableColumn fx:id="colMetodo"  text="Método Pago"  prefWidth="130"/>
+            <TableColumn fx:id="colTotal"   text="Total"        prefWidth="100"/>
+        </columns>
+        <placeholder><Label text="No hay pedidos registrados."/></placeholder>
+    </TableView>
+
+    <HBox spacing="8">
+        <Button text="📋 Ver Detalle"     onAction="#onVerDetalle"
+                style="-fx-background-color: #F3F5F8; -fx-border-color: #E2E5EB; -fx-background-radius: 8; -fx-cursor: hand;"/>
+        <Button text="🔄 Cambiar Estatus" onAction="#onCambiarEstatus"
+                style="-fx-background-color: #FEEDED; -fx-text-fill: #C82429; -fx-border-color: #C82429; -fx-background-radius: 8; -fx-cursor: hand;"/>
+    </HBox>
+</VBox>

@@ -10,7 +10,7 @@ public class Usuario {
     private String telefono;
     private String email;
     private Rol rol;
-    
+
     public Usuario() { }
 
     public int getIdUsuario() { return idUsuario; }

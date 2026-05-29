@@ -1,10 +1,9 @@
 package uv.lis;
 
 /**
- * MainLauncher — Clase de arranque para proyectos JavaFX con Maven.
- * 
- * Cuando Main extiende Application, algunos launchers de Maven/JVM no pueden
- * detectar el main() correctamente. Esta clase actúa como puente.
+ * MainLauncher — clase puente para lanzar JavaFX con Maven.
+ * Necesaria porque Main extiende Application y el exec-maven-plugin
+ * no puede detectar su main() correctamente.
  */
 public class MainLauncher {
     public static void main(String[] args) {

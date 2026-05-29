@@ -10,9 +10,7 @@ import java.sql.SQLException;
  */
 public class ConexionBD {
 
-    private static final String URL      = "jdbc:mysql://localhost:3306/italia_pizza"
-                                         + "?useSSL=false&serverTimezone=America/Mexico_City"
-                                         + "&allowPublicKeyRetrieval=true";
+    private static final String URL      = "jdbc:mysql://localhost:3306/italia_pizza?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8";
     private static final String USUARIO  = "admin_pizza";
     private static final String PASSWORD = "pizza_ita23";
 

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="uv.lis.gui.pedidos.DetallePedidoController"
+      spacing="12" prefWidth="680"
+      style="-fx-background-color: white; -fx-padding: 24;">
+
+    <!-- Panel: Nuevo Pedido -->
+    <VBox fx:id="pnlNuevoPedido" spacing="10">
+        <Label text="Nuevo Pedido" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+        <Separator/>
+        <GridPane hgap="12" vgap="10">
+            <Label text="Cliente *"     GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="cbCliente" GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="280"/>
+            <Label text="Método Pago *"    GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="cbMetodoPago" GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="200"/>
+            <Label text="Tipo Pedido *"    GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="cbTipoPedido" GridPane.rowIndex="2" GridPane.columnIndex="1" prefWidth="200"/>
+        </GridPane>
+    </VBox>
+
+    <!-- Panel: Detalle Existente -->
+    <VBox fx:id="pnlDetalle" spacing="6">
+        <Label fx:id="lblPedidoId" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+        <HBox spacing="20">
+            <Label fx:id="lblCliente" style="-fx-text-fill: #4F5561;"/>
+            <Label fx:id="lblEstatus" style="-fx-font-weight: bold; -fx-text-fill: #F47F23;"/>
+        </HBox>
+        <Separator/>
+        <Label text="Historial de Estatus" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
+        <TableView fx:id="tblBitacora" prefHeight="120">
+            <columns>
+                <TableColumn fx:id="colBEstatus" text="Estatus" prefWidth="140"/>
+                <TableColumn fx:id="colBFecha"   text="Fecha/Hora" prefWidth="200"/>
+            </columns>
+        </TableView>
+    </VBox>
+
+    <Separator/>
+
+    <!-- Agregar producto -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Agregar producto:" style="-fx-font-weight: bold;"/>
+        <ComboBox fx:id="cbProductoAgregar" prefWidth="220"/>
+        <Spinner fx:id="spnCantidad" prefWidth="80"/>
+        <Button text="+ Agregar" onAction="#onAgregarProducto"
+                style="-fx-background-color: #C82429; -fx-text-fill: white; -fx-background-radius: 8; -fx-cursor: hand;"/>
+    </HBox>
+
+    <TableView fx:id="tblDetalle" prefHeight="200">
+        <columns>
+            <TableColumn fx:id="colProducto" text="Producto"   prefWidth="220"/>
+            <TableColumn fx:id="colCantidad" text="Cant."      prefWidth="70"/>
+            <TableColumn fx:id="colPrecio"   text="Precio c/u" prefWidth="100"/>
+            <TableColumn fx:id="colSubtotal" text="Subtotal"   prefWidth="100"/>
+        </columns>
+        <placeholder><Label text="Sin productos."/></placeholder>
+    </TableView>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="– Quitar Seleccionado" onAction="#onQuitarProducto"
+                style="-fx-background-color: #FEEDED; -fx-text-fill: #C82429; -fx-border-color: #C82429; -fx-background-radius: 8;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="lblTotal" text="Total: $0.00"
+               style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #16A66E;"/>
+    </HBox>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Cancelar" onAction="#onCancelar"
+                style="-fx-background-color: #F3F5F8; -fx-border-color: #E2E5EB; -fx-background-radius: 8;"/>
+        <Button text="Guardar Pedido" onAction="#onGuardar"
+                style="-fx-background-color: #C82429; -fx-text-fill: white; -fx-background-radius: 8; -fx-cursor: hand;"/>
+    </HBox>
+</VBox>

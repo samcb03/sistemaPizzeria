@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="uv.lis.gui.pedidos.CambiarEstatusController"
+      spacing="14" prefWidth="380"
+      style="-fx-background-color: white; -fx-padding: 28;">
+
+    <Label text="Cambiar Estatus del Pedido"
+           style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1A1B1E;"/>
+    <Separator/>
+    <Label fx:id="lblPedidoInfo" wrapText="true" style="-fx-text-fill: #4F5561; -fx-font-size: 13px;"/>
+    <Label text="Nuevo estatus:" style="-fx-font-weight: bold;"/>
+    <ComboBox fx:id="cbNuevoEstatus" prefWidth="320" prefHeight="36"/>
+    <Label fx:id="lblError" style="-fx-text-fill: #C82429;" wrapText="true"/>
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Cancelar" onAction="#onCancelar"
+                style="-fx-background-color: #F3F5F8; -fx-border-color: #E2E5EB; -fx-background-radius: 8;"/>
+        <Button text="Guardar Cambio" onAction="#onGuardar"
+                style="-fx-background-color: #C82429; -fx-text-fill: white; -fx-background-radius: 8; -fx-cursor: hand;"/>
+    </HBox>
+</VBox>

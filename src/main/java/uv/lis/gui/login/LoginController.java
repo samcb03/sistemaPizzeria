@@ -57,7 +57,7 @@ public class LoginController {
 
     private void abrirMenuPrincipal() throws Exception {
         Parent root = FXMLLoader.load(
-            getClass().getResource("/uv/lis/italia_pizza/gui/main/MenuPrincipal.fxml"));
+            getClass().getResource("/uv/lis/gui/main/MenuPrincipal.fxml"));
         Stage stage = (Stage) btnIngresar.getScene().getWindow();
         stage.setScene(new Scene(root));
         stage.setResizable(true);

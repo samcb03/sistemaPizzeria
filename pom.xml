@@ -13,7 +13,6 @@
         <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javafx.version>21</javafx.version>
-        <mainClass>uv.lis.MainLauncher</mainClass>
     </properties>
 
     <dependencies>

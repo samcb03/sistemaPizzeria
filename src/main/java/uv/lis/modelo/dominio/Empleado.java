@@ -5,12 +5,30 @@ public class Empleado extends Usuario {
     private String contrasena;
     private Rol rol;
 
-    public Empleado() {}
+    public Empleado() {
 
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
-    public String getContrasena() { return contrasena; }
-    public void setContrasena(String contrasena) { this.contrasena = contrasena; }
-    public Rol getRol() { return rol; }
-    public void setRol(Rol rol) { this.rol = rol; }
+    }
+
+    public String getUsername() { 
+        return username; 
+    }
+
+    public void setUsername(String username) { 
+        this.username = username; 
+    }
+
+    public String getContrasena() { 
+        return contrasena; 
+    }
+
+    public void setContrasena(String contrasena) { 
+        this.contrasena = contrasena; 
+    }
+
+    public Rol getRol() { 
+        return rol; 
+    }
+    public void setRol(Rol rol) { 
+        this.rol = rol; 
+    }
 }

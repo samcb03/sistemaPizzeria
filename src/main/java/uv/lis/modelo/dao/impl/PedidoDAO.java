@@ -6,7 +6,6 @@ import uv.lis.modelo.dominio.*;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,30 +103,25 @@ public class PedidoDAO implements IPedidoDAO {
 
     @Override
     public boolean cambiarEstatus(int idPedido, String nuevoEstatus, int idEmpleado) throws Exception {
-        Connection conn = getConn();
-        conn.setAutoCommit(false);
-        try {
-            int idTipoEstatus;
-            try (PreparedStatement ps = conn.prepareStatement(
-                    "SELECT idTipoEstatus FROM TipoEstatus WHERE nombreEstatus=? LIMIT 1")) {
-                ps.setString(1, nuevoEstatus);
-                try (ResultSet rs = ps.executeQuery()) {
-                    if (!rs.next()) throw new Exception("Estatus no encontrado: " + nuevoEstatus);
-                    idTipoEstatus = rs.getInt(1);
-                }
-            }
-            try (PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE Pedido SET TipoEstatus_idTipoEstatus=?, estatusActual=? WHERE idPedido=?")) {
-                ps.setInt(1, idTipoEstatus); ps.setInt(2, idTipoEstatus); ps.setInt(3, idPedido);
-                ps.executeUpdate();
-            }
-            conn.commit();
+        // Se delega en el procedimiento almacenado sp_cambiar_estatus_pedido:
+        // actualiza el estatus del pedido Y registra la bitacora dentro de una
+        // sola transaccion del lado del servidor. El SP comunica el resultado
+        // mediante el parametro de salida p_mensaje.
+        String llamada = "{ CALL sp_cambiar_estatus_pedido(?, ?, ?, ?) }";
+        try (CallableStatement cs = getConn().prepareCall(llamada)) {
+            cs.setInt(1, idPedido);
+            cs.setString(2, nuevoEstatus);
+            cs.setInt(3, idEmpleado);
+            cs.registerOutParameter(4, Types.VARCHAR);          // OUT p_mensaje
+            cs.execute();
+
+            String mensaje = cs.getString(4);
+            if (mensaje == null || !mensaje.toLowerCase().contains("correctamente"))
+                throw new Exception(mensaje != null ? mensaje
+                        : "No se pudo cambiar el estatus del pedido.");
             return true;
         } catch (SQLException e) {
-            conn.rollback();
             throw new Exception("Error al cambiar estatus: " + e.getMessage(), e);
-        } finally {
-            conn.setAutoCommit(true);
         }
     }
 
@@ -212,6 +206,36 @@ public class PedidoDAO implements IPedidoDAO {
             }
         }
         return lista;
+    }
+
+    @Override
+    public List<Pedido> reportePedidos(Integer idCliente, LocalDate fecha, String estatus) throws Exception {
+        // Busqueda parametrizada delegada al procedimiento sp_reporte_pedidos.
+        // Cualquiera de los tres filtros puede ir en NULL y el SP lo ignora.
+        List<Pedido> lista = new ArrayList<>();
+        String llamada = "{ CALL sp_reporte_pedidos(?, ?, ?) }";
+        try (CallableStatement cs = getConn().prepareCall(llamada)) {
+            if (idCliente != null) cs.setInt(1, idCliente); else cs.setNull(1, Types.INTEGER);
+            if (fecha != null)     cs.setDate(2, Date.valueOf(fecha)); else cs.setNull(2, Types.DATE);
+            if (estatus != null)   cs.setString(3, estatus); else cs.setNull(3, Types.VARCHAR);
+            try (ResultSet rs = cs.executeQuery()) {
+                while (rs.next()) lista.add(mapPedidoReporte(rs));
+            }
+        }
+        return lista;
+    }
+
+    private Pedido mapPedidoReporte(ResultSet rs) throws SQLException {
+        Pedido p = new Pedido();
+        p.setIdPedido(rs.getInt("idPedido"));
+        p.setFechaHoraPedido(rs.getTimestamp("fechaHoraPedido").toLocalDateTime());
+        p.setNombreCliente(rs.getString("cliente"));
+        p.setNombreEmpleado(rs.getString("empleado"));
+        p.setNombreEstatus(rs.getString("estatus"));
+        p.setNombreTipoPedido(rs.getString("tipoPedido"));
+        p.setNombreMetodo(rs.getString("metodoPago"));
+        p.setTotal(rs.getDouble("total"));
+        return p;
     }
 
     private List<Pedido> ejecutarBusqueda(String sql, Integer intParam, String strParam) throws Exception {

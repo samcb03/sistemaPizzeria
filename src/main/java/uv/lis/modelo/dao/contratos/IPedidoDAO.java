@@ -14,6 +14,7 @@ public interface IPedidoDAO {
     List<Pedido> buscarPorCliente(int idCliente) throws Exception;
     List<Pedido> buscarPorFecha(LocalDate fecha) throws Exception;
     List<Pedido> buscarPorEstatus(String estatus) throws Exception;
+    List<Pedido> reportePedidos(Integer idCliente, java.time.LocalDate fecha, String estatus) throws Exception;
     Pedido buscarPorId(int idPedido) throws Exception;
     List<DetallePedido> obtenerDetalle(int idPedido) throws Exception;
     List<BitacoraEstatus> obtenerBitacora(int idPedido) throws Exception;

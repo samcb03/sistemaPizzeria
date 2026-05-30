@@ -109,10 +109,22 @@ public class EmpleadoDAO implements IEmpleadoDAO {
 
     @Override
     public boolean eliminarLogico(int idEmpleado, int idSesion) throws Exception {
-        if (idEmpleado == idSesion) throw new Exception("No puedes eliminar tu propia cuenta activa.");
-        try (PreparedStatement ps = getConn().prepareStatement(
-                "UPDATE Usuario SET estatus=0 WHERE idUsuario=?")) {
-            ps.setInt(1, idEmpleado); return ps.executeUpdate() > 0;
+        // La regla de no autoeliminacion y la baja logica se delegan en el
+        // procedimiento almacenado sp_eliminar_usuario_logico.
+        String llamada = "{ CALL sp_eliminar_usuario_logico(?, ?, ?) }";
+        try (CallableStatement cs = getConn().prepareCall(llamada)) {
+            cs.setInt(1, idEmpleado);
+            cs.setInt(2, idSesion);
+            cs.registerOutParameter(3, Types.VARCHAR);          // OUT p_mensaje
+            cs.execute();
+
+            String mensaje = cs.getString(3);
+            if (mensaje == null || !mensaje.toLowerCase().contains("correctamente"))
+                throw new Exception(mensaje != null ? mensaje
+                        : "No se pudo eliminar el empleado.");
+            return true;
+        } catch (SQLException e) {
+            throw new Exception("Error al eliminar empleado: " + e.getMessage(), e);
         }
     }
 

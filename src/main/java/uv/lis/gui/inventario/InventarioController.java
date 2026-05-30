@@ -13,7 +13,6 @@ import uv.lis.modelo.dominio.InventarioDetalle;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
-import java.util.List;
 
 public class InventarioController {
 

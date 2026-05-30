@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}",
+            "vmArgs": "--module-path \"C:/Users/sam10/OneDrive/Documentos/javafx-sdk-21.0.11/lib\" --add-modules javafx.controls,javafx.fxml"
+        },
+        {
+            "type": "java",
+            "name": "ItaliaPizza",
+            "request": "launch",
+            "mainClass": "uv.lis.MainLauncher",
+            "projectName": "italiapizza",
+            "vmArgs": "--module-path \"C:/Users/sam10/OneDrive/Documentos/javafx-sdk-21.0.11/lib\" --add-modules javafx.controls,javafx.fxml"
+        }
+    ]
+}

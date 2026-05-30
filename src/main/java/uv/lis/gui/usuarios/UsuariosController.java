@@ -192,8 +192,8 @@ public class UsuariosController {
     private void abrirFormulario(Object usuario, boolean esCliente) {
         try {
             String fxml = esCliente
-                ? "/uv/lis/italia_pizza/gui/usuarios/FormCliente.fxml"
-                : "/uv/lis/italia_pizza/gui/usuarios/FormEmpleado.fxml";
+                ? "/uv/lis/gui/usuarios/FormCliente.fxml"
+                : "/uv/lis/gui/usuarios/FormEmpleado.fxml";
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
             Parent root = loader.load();
             if (esCliente) {

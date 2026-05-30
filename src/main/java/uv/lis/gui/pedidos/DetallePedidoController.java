@@ -13,6 +13,7 @@ import uv.lis.modelo.dominio.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import javafx.scene.layout.VBox;
 
 public class DetallePedidoController {
 

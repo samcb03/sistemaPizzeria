@@ -9,8 +9,9 @@ public class Usuario {
     private int estatus;   // 1=Activo, 0=Inactivo
     private String telefono;
     private String email;
-
-    public Usuario() {}
+    private Rol rol;
+    
+    public Usuario() { }
 
     public int getIdUsuario() { return idUsuario; }
     public void setIdUsuario(int idUsuario) { this.idUsuario = idUsuario; }

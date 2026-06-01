@@ -6,7 +6,7 @@ public class Usuario {
     private String apellidoPaterno;
     private String apellidoMaterno;
     private String ciudad;
-    private int estatus;   // 1=Activo, 0=Inactivo
+    private int estatus;  
     private String telefono;
     private String email;
     private Rol rol;

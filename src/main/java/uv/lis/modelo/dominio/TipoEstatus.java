@@ -4,12 +4,31 @@ public class TipoEstatus {
     private int idTipoEstatus;
     private String nombreEstatus;
 
-    public TipoEstatus() {}
-    public TipoEstatus(int id, String nombre) { this.idTipoEstatus = id; this.nombreEstatus = nombre; }
+    public TipoEstatus() {
 
-    public int getIdTipoEstatus() { return idTipoEstatus; }
-    public void setIdTipoEstatus(int id) { this.idTipoEstatus = id; }
-    public String getNombreEstatus() { return nombreEstatus; }
-    public void setNombreEstatus(String n) { this.nombreEstatus = n; }
-    @Override public String toString() { return nombreEstatus; }
+    }
+    public TipoEstatus(int idTipoEstatus, String nombreEstatus) { 
+        this.idTipoEstatus = idTipoEstatus; 
+        this.nombreEstatus = nombreEstatus; 
+    }
+
+    public int getIdTipoEstatus() { 
+        return idTipoEstatus; 
+    }
+
+    public void setIdTipoEstatus(int idTipoEstatus) { 
+        this.idTipoEstatus = idTipoEstatus; 
+    }
+
+    public String getNombreEstatus() { 
+        return nombreEstatus; 
+    }
+
+    public void setNombreEstatus(String nombreEstatus) { 
+        this.nombreEstatus = nombreEstatus; 
+    }
+    
+    @Override public String toString() { 
+        return nombreEstatus; 
+    }
 }

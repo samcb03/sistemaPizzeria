@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package uv.lis.gui.pedidos;
 
 import javafx.collections.FXCollections;
@@ -146,3 +147,148 @@ public class PedidosController {
         } catch (Exception ex) { Alerta.error("Error", ex.getMessage()); }
     }
 }
+=======
+package uv.lis.gui.pedidos;
+
+import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import uv.lis.gui.util.Alerta;
+import uv.lis.gui.util.CsvExporter;
+import uv.lis.modelo.dao.impl.PedidoDAO;
+import uv.lis.modelo.dominio.Pedido;
+
+import java.io.File;
+import java.time.LocalDate;
+import java.util.List;
+
+public class PedidosController {
+
+    @FXML private TableView<Pedido>              tblPedidos;
+    @FXML private TableColumn<Pedido,Integer>    colId;
+    @FXML private TableColumn<Pedido,String>     colCliente, colEstatus, colTipo, colMetodo;
+    @FXML private TableColumn<Pedido,Double>     colTotal;
+
+    @FXML private TextField  txtBuscarCliente;
+    @FXML private DatePicker dpFecha;
+    @FXML private ComboBox<String> cbEstatus;
+
+    private final PedidoDAO dao = new PedidoDAO();
+
+    @FXML
+    public void initialize() {
+        colId.setCellValueFactory(new PropertyValueFactory<>("idPedido"));
+        colCliente.setCellValueFactory(new PropertyValueFactory<>("nombreCliente"));
+        colEstatus.setCellValueFactory(new PropertyValueFactory<>("nombreEstatus"));
+        colTipo.setCellValueFactory(new PropertyValueFactory<>("nombreTipoPedido"));
+        colMetodo.setCellValueFactory(new PropertyValueFactory<>("nombreMetodo"));
+        colTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
+
+        colEstatus.setCellFactory(col -> new TableCell<>() {
+            @Override protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) { setText(null); setStyle(""); return; }
+                setText(item);
+                setStyle(switch (item) {
+                    case "En proceso" -> "-fx-text-fill: #F47F23; -fx-font-weight: bold;";
+                    case "Entregado"  -> "-fx-text-fill: #16A66E; -fx-font-weight: bold;";
+                    case "Cancelado"  -> "-fx-text-fill: #C82429; -fx-font-weight: bold;";
+                    default           -> "";
+                });
+            }
+        });
+
+        cbEstatus.setItems(FXCollections.observableArrayList("Todos","En proceso","Entregado","Cancelado"));
+        cbEstatus.setValue("Todos");
+        cargar();
+    }
+
+    private void cargar() {
+        // Carga inicial via procedimiento almacenado (los tres filtros en NULL = todos).
+        try { tblPedidos.setItems(FXCollections.observableArrayList(dao.reportePedidos(null, null, null))); }
+        catch (Exception e) { Alerta.error("Error", e.getMessage()); }
+    }
+
+    @FXML private void onBuscar(ActionEvent e) {
+        try {
+            LocalDate fecha = dpFecha.getValue();
+            String estatus  = cbEstatus.getValue();
+            String estatusParam = (estatus == null || estatus.equals("Todos")) ? null : estatus;
+            // Un solo procedimiento combina ambos filtros (fecha y/o estatus).
+            List<Pedido> res = dao.reportePedidos(null, fecha, estatusParam);
+            tblPedidos.setItems(FXCollections.observableArrayList(res));
+        } catch (Exception ex) { Alerta.error("Error", ex.getMessage()); }
+    }
+
+    @FXML private void onLimpiar(ActionEvent e) { dpFecha.setValue(null); cbEstatus.setValue("Todos"); cargar(); }
+
+    @FXML private void onNuevoPedido(ActionEvent e) { abrirDetalle(null); }
+
+    @FXML private void onVerDetalle(ActionEvent e) {
+        Pedido sel = tblPedidos.getSelectionModel().getSelectedItem();
+        if (sel == null) { Alerta.advertencia("Selección", "Selecciona un pedido."); return; }
+        abrirDetalle(sel);
+    }
+
+    @FXML private void onCambiarEstatus(ActionEvent e) {
+        Pedido sel = tblPedidos.getSelectionModel().getSelectedItem();
+        if (sel == null) { Alerta.advertencia("Selección", "Selecciona un pedido."); return; }
+        abrirCambioEstatus(sel);
+    }
+
+    @FXML private void onExportarCSV(ActionEvent e) {
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Exportar pedidos");
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV","*.csv"));
+        fc.setInitialFileName("pedidos.csv");
+        File archivo = fc.showSaveDialog(tblPedidos.getScene().getWindow());
+        if (archivo == null) return;
+        try {
+            CsvExporter.exportarPedidos(tblPedidos.getItems(), archivo.getAbsolutePath());
+            Alerta.info("Éxito", "Pedidos exportados correctamente.");
+        } catch (Exception ex) { Alerta.error("Error al exportar", ex.getMessage()); }
+    }
+
+    private void abrirDetalle(Pedido pedido) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/uv/lis/gui/pedidos/DetallePedido.fxml"));
+            Parent root = loader.load();
+            DetallePedidoController ctrl = loader.getController();
+            ctrl.setPedido(pedido);
+            Stage dlg = new Stage();
+            dlg.initModality(Modality.APPLICATION_MODAL);
+            dlg.setTitle(pedido == null ? "Nuevo Pedido" : "Detalle Pedido #" + pedido.getIdPedido());
+            dlg.setScene(new Scene(root));
+            dlg.setResizable(false);
+            dlg.showAndWait();
+            cargar();
+        } catch (Exception ex) { Alerta.error("Error", ex.getMessage()); }
+    }
+
+    private void abrirCambioEstatus(Pedido pedido) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/uv/lis/gui/pedidos/CambiarEstatus.fxml"));
+            Parent root = loader.load();
+            CambiarEstatusController ctrl = loader.getController();
+            ctrl.setPedido(pedido);
+            Stage dlg = new Stage();
+            dlg.initModality(Modality.APPLICATION_MODAL);
+            dlg.setTitle("Cambiar Estatus — Pedido #" + pedido.getIdPedido());
+            dlg.setScene(new Scene(root));
+            dlg.setResizable(false);
+            dlg.showAndWait();
+            cargar();
+        } catch (Exception ex) { Alerta.error("Error", ex.getMessage()); }
+    }
+}
+>>>>>>> 2e7f050b85b1ba7b27058142506c4ae1b5821036

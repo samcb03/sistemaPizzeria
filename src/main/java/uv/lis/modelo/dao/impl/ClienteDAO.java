@@ -102,19 +102,22 @@ public class ClienteDAO implements IClienteDAO {
 
     @Override
     public boolean eliminarLogico(int idCliente, int idSesion) throws Exception {
-        // Verificar que no tenga pedidos
-        try (PreparedStatement ps = getConn().prepareStatement(
-                "SELECT fn_cliente_tiene_pedidos(?) AS tiene")) {
-            ps.setInt(1, idCliente);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next() && rs.getInt("tiene") == 1)
-                    throw new Exception("El cliente tiene pedidos registrados y no puede eliminarse.");
-            }
-        }
-        try (PreparedStatement ps = getConn().prepareStatement(
-                "UPDATE Usuario SET estatus = 0 WHERE idUsuario = ?")) {
-            ps.setInt(1, idCliente);
-            return ps.executeUpdate() > 0;
+        // Las reglas de negocio (cliente con pedidos, no autoeliminacion) y la
+        // baja logica se centralizan en sp_eliminar_usuario_logico.
+        String llamada = "{ CALL sp_eliminar_usuario_logico(?, ?, ?) }";
+        try (CallableStatement cs = getConn().prepareCall(llamada)) {
+            cs.setInt(1, idCliente);
+            cs.setInt(2, idSesion);
+            cs.registerOutParameter(3, Types.VARCHAR);          // OUT p_mensaje
+            cs.execute();
+
+            String mensaje = cs.getString(3);
+            if (mensaje == null || !mensaje.toLowerCase().contains("correctamente"))
+                throw new Exception(mensaje != null ? mensaje
+                        : "No se pudo eliminar el cliente.");
+            return true;
+        } catch (SQLException e) {
+            throw new Exception("Error al eliminar cliente: " + e.getMessage(), e);
         }
     }
 

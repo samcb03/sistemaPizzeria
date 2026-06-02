@@ -62,18 +62,23 @@ public class PedidosController {
     }
 
     private void cargar() {
-        // Carga inicial via procedimiento almacenado (los tres filtros en NULL = todos).
-        try { tblPedidos.setItems(FXCollections.observableArrayList(dao.reportePedidos(null, null, null))); }
+        try { tblPedidos.setItems(FXCollections.observableArrayList(dao.buscarTodos())); }
         catch (Exception e) { Alerta.error("Error", e.getMessage()); }
     }
 
     @FXML private void onBuscar(ActionEvent e) {
         try {
+            List<Pedido> res;
             LocalDate fecha = dpFecha.getValue();
             String estatus  = cbEstatus.getValue();
-            String estatusParam = (estatus == null || estatus.equals("Todos")) ? null : estatus;
-            // Un solo procedimiento combina ambos filtros (fecha y/o estatus).
-            List<Pedido> res = dao.reportePedidos(null, fecha, estatusParam);
+
+            if (fecha != null)
+                res = dao.buscarPorFecha(fecha);
+            else if (estatus != null && !estatus.equals("Todos"))
+                res = dao.buscarPorEstatus(estatus);
+            else
+                res = dao.buscarTodos();
+
             tblPedidos.setItems(FXCollections.observableArrayList(res));
         } catch (Exception ex) { Alerta.error("Error", ex.getMessage()); }
     }

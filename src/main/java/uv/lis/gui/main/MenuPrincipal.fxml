@@ -10,14 +10,14 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="rootPane" prefHeight="800" prefWidth="1280" style="-fx-background-color: #F3F5F8;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/26" fx:controller="uv.lis.gui.main.MenuPrincipalController">
+<BorderPane fx:id="rootPane" prefHeight="800" prefWidth="1280" style="-fx-background-color: #F3F5F8;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uv.lis.gui.main.MenuPrincipalController">
 
     <!-- MENU BAR -->
     <top>
         <VBox>
-            <MenuBar prefWidth="1342.0" style="-fx-background-color: #FFA08A; -fx-padding: 2 0;">
+            <MenuBar style="-fx-background-color: #C82429; -fx-padding: 2 0;">
                 <!-- Logo -->
-                <Menu disable="true" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;" text="🍕 Italia Pizza" />
+                <Menu style="-fx-text-fill: black -fx-font-weight: bold; -fx-font-size: 14px;" text="🍕 Italia Pizza" />
 
                 <Menu style="-fx-text-fill: white;" text="Administración">
                     <MenuItem fx:id="miUsuarios" onAction="#onUsuarios" text="👥  Usuarios" />

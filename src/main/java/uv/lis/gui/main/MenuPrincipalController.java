@@ -43,7 +43,7 @@ public class MenuPrincipalController {
     private void onAcercaDe() {
         Alerta.info("Acerca de Italia Pizza",
             "Sistema de Administración Italia Pizza v1.0\n\n" +
-            "Equipo de Desarrollo:\n[Nombres del equipo]\n\n" +
+            "Equipo de Desarrollo:\nAlvarez Villalobos Emilio, \n Carreto Barrientos Samuel, \n Juarez Reyes Denisse Yamileth, \n Martinez Lopez Alan\n\n" +
             "Ingeniería de Software • 4° Semestre\n" +
             "Facultad de Estadística e Informática\n" +
             "Universidad Veracruzana • 2025");

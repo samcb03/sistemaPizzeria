@@ -7,21 +7,12 @@ public class Usuario {
     private String apellidoPaterno;
     private String apellidoMaterno;
     private String ciudad;
-<<<<<<< HEAD
-    private int estatus;  
-=======
->>>>>>> 2e7f050b85b1ba7b27058142506c4ae1b5821036
+
     private String telefono;
     private String email;
     private Rol rol;
 
-<<<<<<< HEAD
     public Usuario() { }
-=======
-    public Usuario() {
->>>>>>> 2e7f050b85b1ba7b27058142506c4ae1b5821036
-
-    }
 
     public int getIdUsuario() { 
         return idUsuario; 

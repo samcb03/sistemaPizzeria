@@ -8,9 +8,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-/**
- * CsvExporter — exportación a CSV para pedidos e inventario.
- */
 public class CsvExporter {
 
     public static void exportarPedidos(List<Pedido> pedidos, String rutaArchivo) throws IOException {

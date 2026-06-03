@@ -53,8 +53,10 @@ public class ProductosController {
     }
 
     private void cargar() {
-        try { tblProductos.setItems(FXCollections.observableArrayList(dao.buscarTodos())); }
-        catch (Exception e) { Alerta.error("Error", e.getMessage()); }
+        try { tblProductos.setItems(FXCollections.observableArrayList(dao.buscarTodos()));
+            
+        } catch (Exception e) { 
+            Alerta.error("Error", e.getMessage()); }
     }
 
     @FXML private void onBuscar(ActionEvent e) {
@@ -62,10 +64,15 @@ public class ProductosController {
         try {
             List<Producto> res = txt.isEmpty() ? dao.buscarTodos() : dao.buscarPorNombre(txt);
             tblProductos.setItems(FXCollections.observableArrayList(res));
-        } catch (Exception ex) { Alerta.error("Error", ex.getMessage()); }
+        } catch (Exception ex) { 
+            Alerta.error("Error", ex.getMessage());
+        }
     }
 
-    @FXML private void onNuevo(ActionEvent e)  { abrirForm(null); }
+    @FXML private void onNuevo(ActionEvent e)  { 
+        abrirForm(null); 
+    }
+    
     @FXML private void onEditar(ActionEvent e) {
         Producto sel = tblProductos.getSelectionModel().getSelectedItem();
         if (sel == null) { Alerta.advertencia("Selección", "Selecciona un producto para editar."); return; }

@@ -7,11 +7,11 @@
       fx:controller="uv.lis.gui.usuarios.UsuariosController"
       spacing="12" style="-fx-background-color: #F3F5F8; -fx-padding: 20;">
 
-    <!-- Título -->
+
     <Label text="Gestión de Usuarios"
            style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #1A1B1E;"/>
 
-    <!-- Toolbar búsqueda -->
+
     <HBox spacing="10" alignment="CENTER_LEFT"
           style="-fx-background-color: white; -fx-padding: 12; -fx-background-radius: 10;">
         <TextField fx:id="txtBuscar" promptText="Buscar..." prefWidth="280" prefHeight="36"
@@ -27,7 +27,6 @@
                 style="-fx-background-color: #1A1B1E; -fx-text-fill: white; -fx-background-radius: 8; -fx-cursor: hand;"/>
     </HBox>
 
-    <!-- Tabs Clientes / Empleados -->
     <TabPane fx:id="tabPane" VBox.vgrow="ALWAYS" tabClosingPolicy="UNAVAILABLE">
 
         <Tab text="👥 Clientes">

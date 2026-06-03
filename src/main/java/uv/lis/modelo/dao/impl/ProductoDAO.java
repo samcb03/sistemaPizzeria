@@ -35,7 +35,6 @@ public class ProductoDAO implements IProductoDAO {
 
     @Override
     public boolean actualizar(Producto p) throws Exception {
-        // El código de producto NO se puede editar (RF-09)
         String sql = "UPDATE Producto SET nombre=?,descripcion=?,restricciones=?,precio=?,cantidad=?,foto=?,esPreparado=?,esInsumo=? " +
                      "WHERE idProducto=?";
         try (PreparedStatement ps = getConn().prepareStatement(sql)) {

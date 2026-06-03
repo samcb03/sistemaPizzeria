@@ -1,6 +1,7 @@
 package uv.lis.modelo.dominio;
 
 public class DetallePedido {
+
     private int idProducto;
     private int idPedido;
     private int cantidadProductos;
@@ -12,51 +13,51 @@ public class DetallePedido {
 
     }
 
-    public int getIdProducto() { 
-        return idProducto; 
+    public int getIdProducto() {
+        return idProducto;
     }
 
-    public void setIdProducto(int idProducto) { 
-        this.idProducto = idProducto; 
+    public void setIdProducto(int idProducto) {
+        this.idProducto = idProducto;
     }
 
-    public int getIdPedido() { 
-        return idPedido; 
+    public int getIdPedido() {
+        return idPedido;
     }
 
-    public void setIdPedido(int idPedido) { 
-        this.idPedido = idPedido; 
-    }
-    
-    public String getNombreProducto() { 
-        return nombreProducto; 
+    public void setIdPedido(int idPedido) {
+        this.idPedido = idPedido;
     }
 
-    public void setNombreProducto(String nombreProducto) { 
-        this.nombreProducto = nombreProducto; 
+    public String getNombreProducto() {
+        return nombreProducto;
     }
 
-    public double getPrecioUnitario() { 
-        return precioUnitario; 
+    public void setNombreProducto(String nombreProducto) {
+        this.nombreProducto = nombreProducto;
     }
 
-    public void setPrecioUnitario(double precioUnitario) { 
-        this.precioUnitario = precioUnitario; 
+    public double getPrecioUnitario() {
+        return precioUnitario;
     }
 
-    public int getCantidadProductos() { 
-        return cantidadProductos; 
+    public void setPrecioUnitario(double precioUnitario) {
+        this.precioUnitario = precioUnitario;
     }
 
-    public void setCantidadProductos(int cantidadProductos) { 
-        this.cantidadProductos = cantidadProductos; 
+    public int getCantidadProductos() {
+        return cantidadProductos;
     }
 
-    public double getSubtotal() { 
-        return subtotal; 
+    public void setCantidadProductos(int cantidadProductos) {
+        this.cantidadProductos = cantidadProductos;
     }
 
-    public void setSubtotal(double subtotal) { 
-        this.subtotal = subtotal; 
+    public double getSubtotal() {
+        return subtotal;
+    }
+
+    public void setSubtotal(double subtotal) {
+        this.subtotal = subtotal;
     }
 }

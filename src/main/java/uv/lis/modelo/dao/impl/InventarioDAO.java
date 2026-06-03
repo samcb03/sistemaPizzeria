@@ -28,15 +28,18 @@ public class InventarioDAO implements IInventarioDAO {
                 ps.setInt(2, detalles.stream().mapToInt(InventarioDetalle::getCantidadReal).sum());
                 ps.setInt(3, idEmpleado);
                 ps.executeUpdate();
-                try (ResultSet rk = ps.getGeneratedKeys()) { rk.next(); idInventario = rk.getInt(1); }
+                try (ResultSet rk = ps.getGeneratedKeys()) {
+                    rk.next();
+                    idInventario = rk.getInt(1);
+                }
             }
             for (InventarioDetalle d : detalles) {
                 try (PreparedStatement ps = conn.prepareStatement(
                         "INSERT INTO InventarioTieneProducto (Inventario_idInventario,Producto_idProducto,cantidadEnSistema,cantidadReportada,descripcion) VALUES (?,?,?,?,?)")) {
                     ps.setInt(1, idInventario);
                     ps.setInt(2, d.getIdProducto());
-                    ps.setInt(3, d.getCantidadSistema());      // lo que el sistema cree tener
-                    ps.setInt(4, d.getCantidadReal());         // lo que el empleado conto fisicamente
+                    ps.setInt(3, d.getCantidadSistema());
+                    ps.setInt(4, d.getCantidadReal());
                     ps.setString(5, d.getDescripcion());
                     ps.executeUpdate();
                 }
@@ -54,10 +57,9 @@ public class InventarioDAO implements IInventarioDAO {
     @Override
     public List<InventarioDetalle> obtenerUltimoReporte() throws Exception {
         List<InventarioDetalle> lista = new ArrayList<>();
-        String sql = "SELECT * FROM v_reporte_inventario " +
-                     "WHERE idInventario = (SELECT MAX(idInventario) FROM Inventario)";
-        try (PreparedStatement ps = getConn().prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        String sql = "SELECT * FROM v_reporte_inventario "
+                + "WHERE idInventario = (SELECT MAX(idInventario) FROM Inventario)";
+        try (PreparedStatement ps = getConn().prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 InventarioDetalle d = new InventarioDetalle();
                 d.setIdInventario(rs.getInt("idInventario"));

@@ -12,7 +12,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(
-            getClass().getResource("/uv/lis/gui/login/Login.fxml"));
+                getClass().getResource("/uv/lis/gui/login/Login.fxml"));
         Scene scene = new Scene(root);
         stage.setTitle("Italia Pizza — Sistema de Administración");
         stage.setResizable(false);
@@ -20,7 +20,6 @@ public class Main extends Application {
         stage.show();
     }
 
-    //´prueba commit
     @Override
     public void stop() {
         ConexionBD.cerrarConexion();

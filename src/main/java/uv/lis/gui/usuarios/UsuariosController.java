@@ -1,7 +1,6 @@
 package uv.lis.gui.usuarios;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,37 +16,41 @@ import uv.lis.modelo.dao.impl.ClienteDAO;
 import uv.lis.modelo.dao.impl.EmpleadoDAO;
 import uv.lis.modelo.dominio.Cliente;
 import uv.lis.modelo.dominio.Empleado;
-
-import java.util.ArrayList;
 import java.util.List;
 
-//NOTA
 public class UsuariosController {
 
-    // ── Tabla Clientes ──
-    @FXML private TableView<Cliente>             tblClientes;
-    @FXML private TableColumn<Cliente,Integer>   colCIdUsuario;
-    @FXML private TableColumn<Cliente,String>    colCNombre, colCCiudad;
-    @FXML private TableColumn<Cliente,Integer>   colCEstatus;
+    @FXML
+    private TableView<Cliente> tblClientes;
+    @FXML
+    private TableColumn<Cliente, Integer> colCIdUsuario;
+    @FXML
+    private TableColumn<Cliente, String> colCNombre, colCCiudad;
+    @FXML
+    private TableColumn<Cliente, Integer> colCEstatus;
+    @FXML
+    private TableView<Empleado> tblEmpleados;
+    @FXML
+    private TableColumn<Empleado, Integer> colEIdUsuario;
+    @FXML
+    private TableColumn<Empleado, String> colENombre, colEUsername, colERol;
+    @FXML
+    private TableColumn<Empleado, Integer> colEEstatus;
+    @FXML
+    private TextField txtBuscar;
+    @FXML
+    private ComboBox<String> cbBuscarPor;
+    @FXML
+    private TabPane tabPane;
 
-    // ── Tabla Empleados ──
-    @FXML private TableView<Empleado>             tblEmpleados;
-    @FXML private TableColumn<Empleado,Integer>  colEIdUsuario;
-    @FXML private TableColumn<Empleado,String>   colENombre, colEUsername, colERol;
-    @FXML private TableColumn<Empleado,Integer>  colEEstatus;
-
-    @FXML private TextField txtBuscar;
-    @FXML private ComboBox<String> cbBuscarPor;
-    @FXML private TabPane tabPane;
-
-    private final ClienteDAO  clienteDAO  = new ClienteDAO();
+    private final ClienteDAO clienteDAO = new ClienteDAO();
     private final EmpleadoDAO empleadoDAO = new EmpleadoDAO();
 
     @FXML
     public void initialize() {
         configurarTablaClientes();
         configurarTablaEmpleados();
-        cbBuscarPor.setItems(FXCollections.observableArrayList("Nombre","Teléfono","Dirección"));
+        cbBuscarPor.setItems(FXCollections.observableArrayList("Nombre", "Telefono", "Direccion"));
         cbBuscarPor.setValue("Nombre");
         cargarClientes();
         cargarEmpleados();
@@ -59,10 +62,13 @@ public class UsuariosController {
         colCCiudad.setCellValueFactory(new PropertyValueFactory<>("ciudad"));
         colCEstatus.setCellValueFactory(new PropertyValueFactory<>("estatus"));
         colCEstatus.setCellFactory(col -> new TableCell<>() {
-            @Override protected void updateItem(Integer item, boolean empty) {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty || item == null) { setText(null); setStyle(""); }
-                else {
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
                     setText(item == 1 ? "Activo" : "Inactivo");
                     setStyle(item == 1 ? "-fx-text-fill: #16A66E;" : "-fx-text-fill: #C82429;");
                 }
@@ -75,19 +81,26 @@ public class UsuariosController {
         colENombre.setCellValueFactory(new PropertyValueFactory<>("nombreCompleto"));
         colEUsername.setCellValueFactory(new PropertyValueFactory<>("username"));
         colERol.setCellFactory(col -> new TableCell<>() {
-            @Override protected void updateItem(String item, boolean empty) {
+            @Override
+            protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty) { setText(null); return; }
+                if (empty) {
+                    setText(null);
+                    return;
+                }
                 Empleado emp = getTableView().getItems().get(getIndex());
                 setText(emp.getRol() != null ? emp.getRol().getNombreRol() : "");
             }
         });
         colEEstatus.setCellValueFactory(new PropertyValueFactory<>("estatus"));
         colEEstatus.setCellFactory(col -> new TableCell<>() {
-            @Override protected void updateItem(Integer item, boolean empty) {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty || item == null) { setText(null); setStyle(""); }
-                else {
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
                     setText(item == 1 ? "Activo" : "Inactivo");
                     setStyle(item == 1 ? "-fx-text-fill: #16A66E;" : "-fx-text-fill: #C82429;");
                 }
@@ -119,15 +132,18 @@ public class UsuariosController {
         try {
             if (esClientes) {
                 List<Cliente> res = switch (criterio) {
-                    case "Teléfono"   -> clienteDAO.buscarPorTelefono(texto);
-                    case "Dirección"  -> clienteDAO.buscarPorDireccion(texto);
-                    default           -> texto.isEmpty() ? clienteDAO.buscarTodos() : clienteDAO.buscarPorNombre(texto);
+                    case "Telefono" ->
+                        clienteDAO.buscarPorTelefono(texto);
+                    case "Direccion" ->
+                        clienteDAO.buscarPorDireccion(texto);
+                    default ->
+                        texto.isEmpty() ? clienteDAO.buscarTodos() : clienteDAO.buscarPorNombre(texto);
                 };
                 tblClientes.setItems(FXCollections.observableArrayList(res));
             } else {
                 List<Empleado> res = texto.isEmpty()
-                    ? empleadoDAO.buscarTodos()
-                    : empleadoDAO.buscarPorNombre(texto);
+                        ? empleadoDAO.buscarTodos()
+                        : empleadoDAO.buscarPorNombre(texto);
                 tblEmpleados.setItems(FXCollections.observableArrayList(res));
             }
         } catch (Exception e) {
@@ -148,27 +164,38 @@ public class UsuariosController {
     @FXML
     private void onEditarCliente(ActionEvent event) {
         Cliente sel = tblClientes.getSelectionModel().getSelectedItem();
-        if (sel == null) { Alerta.advertencia("Selección", "Selecciona un cliente para editar."); return; }
+        if (sel == null) {
+            Alerta.advertencia("Seleccion", "Selecciona un cliente para editar.");
+            return;
+        }
         abrirFormulario(sel, true);
     }
 
     @FXML
     private void onEditarEmpleado(ActionEvent event) {
         Empleado sel = tblEmpleados.getSelectionModel().getSelectedItem();
-        if (sel == null) { Alerta.advertencia("Selección", "Selecciona un empleado para editar."); return; }
+        if (sel == null) {
+            Alerta.advertencia("Seleccion", "Selecciona un empleado para editar.");
+            return;
+        }
         abrirFormulario(sel, false);
     }
 
     @FXML
     private void onEliminarCliente(ActionEvent event) {
         Cliente sel = tblClientes.getSelectionModel().getSelectedItem();
-        if (sel == null) { Alerta.advertencia("Selección", "Selecciona un cliente para eliminar."); return; }
-        if (!Alerta.confirmar("Confirmar Eliminación",
-                "¿Deseas desactivar al cliente \"" + sel.getNombreCompleto() + "\"?\n" +
-                "La cuenta quedará inactiva pero sus datos se conservarán.")) return;
+        if (sel == null) {
+            Alerta.advertencia("Seleccion", "Selecciona un cliente para eliminar.");
+            return;
+        }
+        if (!Alerta.confirmar("Confirmar Eliminacion",
+                "¿Deseas desactivar al cliente \"" + sel.getNombreCompleto() + "\"?\n"
+                + "La cuenta quedara inactiva pero sus datos se conservaran.")) {
+            return;
+        }
         try {
             clienteDAO.eliminarLogico(sel.getIdUsuario(), Sesion.getInstance().getEmpleadoActual().getIdUsuario());
-            Alerta.info("Éxito", "Cliente desactivado correctamente.");
+            Alerta.info("Exito", "Cliente desactivado correctamente.");
             cargarClientes();
         } catch (Exception e) {
             Alerta.error("No se pudo eliminar", e.getMessage());
@@ -178,12 +205,17 @@ public class UsuariosController {
     @FXML
     private void onEliminarEmpleado(ActionEvent event) {
         Empleado sel = tblEmpleados.getSelectionModel().getSelectedItem();
-        if (sel == null) { Alerta.advertencia("Selección", "Selecciona un empleado para eliminar."); return; }
-        if (!Alerta.confirmar("Confirmar Eliminación",
-                "¿Deseas desactivar al empleado \"" + sel.getNombreCompleto() + "\"?")) return;
+        if (sel == null) {
+            Alerta.advertencia("Seleccion", "Selecciona un empleado para eliminar.");
+            return;
+        }
+        if (!Alerta.confirmar("Confirmar Eliminacion",
+                "¿Deseas desactivar al empleado \"" + sel.getNombreCompleto() + "\"?")) {
+            return;
+        }
         try {
             empleadoDAO.eliminarLogico(sel.getIdUsuario(), Sesion.getInstance().getEmpleadoActual().getIdUsuario());
-            Alerta.info("Éxito", "Empleado desactivado correctamente.");
+            Alerta.info("Exito", "Empleado desactivado correctamente.");
             cargarEmpleados();
         } catch (Exception e) {
             Alerta.error("No se pudo eliminar", e.getMessage());
@@ -192,9 +224,8 @@ public class UsuariosController {
 
     private void abrirFormulario(Object usuario, boolean esCliente) {
         try {
-            String fxml = esCliente
-                ? "/uv/lis/gui/usuarios/FormCliente.fxml"
-                : "/uv/lis/gui/usuarios/FormEmpleado.fxml";
+            String fxml = esCliente ? "/uv/lis/gui/usuarios/FormCliente.fxml"
+                    : "/uv/lis/gui/usuarios/FormEmpleado.fxml";
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
             Parent root = loader.load();
             if (esCliente) {
@@ -207,12 +238,16 @@ public class UsuariosController {
             Stage dialog = new Stage();
             dialog.initModality(Modality.APPLICATION_MODAL);
             dialog.setTitle(esCliente
-                ? (usuario == null ? "Nuevo Cliente" : "Editar Cliente")
-                : (usuario == null ? "Nuevo Empleado" : "Editar Empleado"));
+                    ? (usuario == null ? "Nuevo Cliente" : "Editar Cliente")
+                    : (usuario == null ? "Nuevo Empleado" : "Editar Empleado"));
             dialog.setScene(new Scene(root));
             dialog.setResizable(false);
             dialog.showAndWait();
-            if (esCliente) cargarClientes(); else cargarEmpleados();
+            if (esCliente) {
+                cargarClientes();
+            } else {
+                cargarEmpleados();
+            }
         } catch (Exception e) {
             Alerta.error("Error", e.getMessage());
         }

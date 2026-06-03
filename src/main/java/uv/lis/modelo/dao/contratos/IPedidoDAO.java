@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface IPedidoDAO {
+    
     int crear(Pedido pedido) throws Exception;
     boolean actualizarDetalle(int idPedido, List<DetallePedido> detalles) throws Exception;
     boolean cambiarEstatus(int idPedido, String nuevoEstatus, int idEmpleado) throws Exception;
@@ -18,4 +19,5 @@ public interface IPedidoDAO {
     Pedido buscarPorId(int idPedido) throws Exception;
     List<DetallePedido> obtenerDetalle(int idPedido) throws Exception;
     List<BitacoraEstatus> obtenerBitacora(int idPedido) throws Exception;
+    
 }

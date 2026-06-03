@@ -1,6 +1,7 @@
 package uv.lis.modelo.dominio;
 
 public class Usuario {
+
     private int idUsuario;
     private int estatus;
     private String nombre;
@@ -12,77 +13,79 @@ public class Usuario {
     private String email;
     private Rol rol;
 
-    public Usuario() { }
-
-    public int getIdUsuario() { 
-        return idUsuario; 
+    public Usuario() {
     }
 
-    public void setIdUsuario(int idUsuario) { 
-        this.idUsuario = idUsuario; 
+    public int getIdUsuario() {
+        return idUsuario;
     }
 
-    public String getNombre() { 
-        return nombre; 
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
-    public void setNombre(String nombre) { 
-        this.nombre = nombre; 
+    public String getNombre() {
+        return nombre;
     }
 
-    public String getApellidoPaterno() { 
-        return apellidoPaterno; 
-    }
-    
-    public void setApellidoPaterno(String ap) { 
-        this.apellidoPaterno = ap; 
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
-    public String getApellidoMaterno() { 
-        return apellidoMaterno; 
+    public String getApellidoPaterno() {
+        return apellidoPaterno;
     }
 
-    public void setApellidoMaterno(String am) { 
-        this.apellidoMaterno = am; 
+    public void setApellidoPaterno(String ap) {
+        this.apellidoPaterno = ap;
     }
 
-    public String getCiudad() { 
-        return ciudad; 
+    public String getApellidoMaterno() {
+        return apellidoMaterno;
     }
 
-    public void setCiudad(String ciudad) { 
-        this.ciudad = ciudad; 
+    public void setApellidoMaterno(String am) {
+        this.apellidoMaterno = am;
     }
 
-    public int getEstatus() { 
-        return estatus; 
+    public String getCiudad() {
+        return ciudad;
     }
 
-    public void setEstatus(int estatus) { 
-        this.estatus = estatus; 
+    public void setCiudad(String ciudad) {
+        this.ciudad = ciudad;
     }
 
-    public String getTelefono() { 
-        return telefono; 
+    public int getEstatus() {
+        return estatus;
     }
 
-    public void setTelefono(String telefono) { 
-        this.telefono = telefono; 
+    public void setEstatus(int estatus) {
+        this.estatus = estatus;
     }
 
-    public String getEmail() { 
-        return email; 
+    public String getTelefono() {
+        return telefono;
     }
 
-    public void setEmail(String email) { 
-        this.email = email; 
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getNombreCompleto() {
         return nombre + " " + apellidoPaterno + " " + apellidoMaterno;
     }
 
-    @Override public String toString() { 
-        return getNombreCompleto(); 
+    @Override
+    public String toString() {
+        return getNombreCompleto();
     }
 }

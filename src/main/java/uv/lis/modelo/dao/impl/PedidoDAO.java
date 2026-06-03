@@ -22,13 +22,13 @@ public class PedidoDAO implements IPedidoDAO {
         try {
             int idEstatus;
             try (PreparedStatement ps = conn.prepareStatement(
-                    "SELECT idTipoEstatus FROM TipoEstatus WHERE nombreEstatus='En proceso' LIMIT 1");
-                 ResultSet rs = ps.executeQuery()) {
-                rs.next(); idEstatus = rs.getInt(1);
+                    "SELECT idTipoEstatus FROM TipoEstatus WHERE nombreEstatus='En proceso' LIMIT 1"); ResultSet rs = ps.executeQuery()) {
+                rs.next();
+                idEstatus = rs.getInt(1);
             }
-            String sqlP = "INSERT INTO Pedido (fechaHoraPedido,estatusActual,Cliente_idCliente," +
-                          "Empleado_idEmpleado,MetodoPago_idMetodo,TipoPedido_idTipoPedido,TipoEstatus_idTipoEstatus) " +
-                          "VALUES (NOW(),?,?,?,?,?,?)";
+            String sqlP = "INSERT INTO Pedido (fechaHoraPedido,estatusActual,Cliente_idCliente,"
+                    + "Empleado_idEmpleado,MetodoPago_idMetodo,TipoPedido_idTipoPedido,TipoEstatus_idTipoEstatus) "
+                    + "VALUES (NOW(),?,?,?,?,?,?)";
             int idPedido;
             try (PreparedStatement ps = conn.prepareStatement(sqlP, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setInt(1, idEstatus);
@@ -38,7 +38,10 @@ public class PedidoDAO implements IPedidoDAO {
                 ps.setInt(5, pedido.getIdTipoPedido());
                 ps.setInt(6, idEstatus);
                 ps.executeUpdate();
-                try (ResultSet rk = ps.getGeneratedKeys()) { rk.next(); idPedido = rk.getInt(1); }
+                try (ResultSet rk = ps.getGeneratedKeys()) {
+                    rk.next();
+                    idPedido = rk.getInt(1);
+                }
             }
             for (DetallePedido d : pedido.getDetalles()) {
                 try (PreparedStatement ps = conn.prepareStatement(
@@ -52,14 +55,15 @@ public class PedidoDAO implements IPedidoDAO {
             }
             int idBitacora;
             try (PreparedStatement ps = conn.prepareStatement(
-                    "SELECT idEstatus FROM BitacoraEstatus WHERE nombreEstatus='Pedido creado' LIMIT 1");
-                 ResultSet rs = ps.executeQuery()) {
-                rs.next(); idBitacora = rs.getInt(1);
+                    "SELECT idEstatus FROM BitacoraEstatus WHERE nombreEstatus='Pedido creado' LIMIT 1"); ResultSet rs = ps.executeQuery()) {
+                rs.next();
+                idBitacora = rs.getInt(1);
             }
             try (PreparedStatement ps = conn.prepareStatement(
                     "INSERT INTO PedidoTieneBitacoraEstatus (Pedido_idPedido,BitacoraEstatus_idEstatus,Empleado_idEmpleado,fechaHora) VALUES (?,?,?,NOW())")) {
-                ps.setInt(1, idPedido); ps.setInt(2, idBitacora);
-                ps.setInt(3, pedido.getIdEmpleado());  
+                ps.setInt(1, idPedido);
+                ps.setInt(2, idBitacora);
+                ps.setInt(3, pedido.getIdEmpleado());
                 ps.executeUpdate();
             }
             conn.commit();
@@ -79,13 +83,16 @@ public class PedidoDAO implements IPedidoDAO {
         try {
             try (PreparedStatement ps = conn.prepareStatement(
                     "DELETE FROM DetallePedido WHERE Pedido_idPedido=?")) {
-                ps.setInt(1, idPedido); ps.executeUpdate();
+                ps.setInt(1, idPedido);
+                ps.executeUpdate();
             }
             for (DetallePedido d : detalles) {
                 try (PreparedStatement ps = conn.prepareStatement(
                         "INSERT INTO DetallePedido (Producto_idProducto,Pedido_idPedido,cantidadProductos,subtotal) VALUES (?,?,?,?)")) {
-                    ps.setInt(1, d.getIdProducto()); ps.setInt(2, idPedido);
-                    ps.setInt(3, d.getCantidadProductos()); ps.setDouble(4, d.getSubtotal());
+                    ps.setInt(1, d.getIdProducto());
+                    ps.setInt(2, idPedido);
+                    ps.setInt(3, d.getCantidadProductos());
+                    ps.setDouble(4, d.getSubtotal());
                     ps.executeUpdate();
                 }
             }
@@ -106,14 +113,15 @@ public class PedidoDAO implements IPedidoDAO {
             cs.setInt(1, idPedido);
             cs.setString(2, nuevoEstatus);
             cs.setInt(3, idEmpleado);
-            cs.registerOutParameter(4, Types.VARCHAR);          
+            cs.registerOutParameter(4, Types.VARCHAR);
             cs.execute();
 
             String mensaje = cs.getString(4);
             String m = (mensaje == null) ? "" : mensaje.toLowerCase();
-            if (m.isEmpty() || m.contains("error") || m.contains("no encontrado"))
+            if (m.isEmpty() || m.contains("error") || m.contains("no encontrado")) {
                 throw new Exception(mensaje != null ? mensaje
                         : "No se pudo cambiar el estatus del pedido.");
+            }
             return true;
         } catch (SQLException e) {
             throw new Exception("Error al cambiar estatus: " + e.getMessage(), e);
@@ -127,15 +135,15 @@ public class PedidoDAO implements IPedidoDAO {
 
     @Override
     public List<Pedido> buscarPorCliente(int idCliente) throws Exception {
-        String sql = "SELECT p.idPedido,p.fechaHoraPedido,fn_nombre_completo(c.idCliente) AS nombreCliente," +
-                     "te.nombreEstatus,tp.nombreTipo,mp.metodo,fn_nombre_completo(e.idEmpleado) AS nombreEmpleado," +
-                     "fn_total_pedido(p.idPedido) AS totalPedido " +
-                     "FROM Pedido p INNER JOIN Cliente c ON p.Cliente_idCliente=c.idCliente " +
-                     "INNER JOIN TipoEstatus te ON p.TipoEstatus_idTipoEstatus=te.idTipoEstatus " +
-                     "INNER JOIN TipoPedido tp ON p.TipoPedido_idTipoPedido=tp.idTipoPedido " +
-                     "INNER JOIN MetodoPago mp ON p.MetodoPago_idMetodo=mp.idMetodo " +
-                     "INNER JOIN Empleado e ON p.Empleado_idEmpleado=e.idEmpleado " +
-                     "WHERE p.Cliente_idCliente=? ORDER BY p.fechaHoraPedido DESC";
+        String sql = "SELECT p.idPedido,p.fechaHoraPedido,fn_nombre_completo(c.idCliente) AS nombreCliente,"
+                + "te.nombreEstatus,tp.nombreTipo,mp.metodo,fn_nombre_completo(e.idEmpleado) AS nombreEmpleado,"
+                + "fn_total_pedido(p.idPedido) AS totalPedido "
+                + "FROM Pedido p INNER JOIN Cliente c ON p.Cliente_idCliente=c.idCliente "
+                + "INNER JOIN TipoEstatus te ON p.TipoEstatus_idTipoEstatus=te.idTipoEstatus "
+                + "INNER JOIN TipoPedido tp ON p.TipoPedido_idTipoPedido=tp.idTipoPedido "
+                + "INNER JOIN MetodoPago mp ON p.MetodoPago_idMetodo=mp.idMetodo "
+                + "INNER JOIN Empleado e ON p.Empleado_idEmpleado=e.idEmpleado "
+                + "WHERE p.Cliente_idCliente=? ORDER BY p.fechaHoraPedido DESC";
         return ejecutarBusqueda(sql, idCliente, null);
     }
 
@@ -161,10 +169,10 @@ public class PedidoDAO implements IPedidoDAO {
     @Override
     public List<DetallePedido> obtenerDetalle(int idPedido) throws Exception {
         List<DetallePedido> lista = new ArrayList<>();
-        String sql = "SELECT dp.Producto_idProducto,dp.Pedido_idPedido,pr.nombre," +
-                     "pr.precio,dp.cantidadProductos,dp.subtotal " +
-                     "FROM DetallePedido dp INNER JOIN Producto pr ON dp.Producto_idProducto=pr.idProducto " +
-                     "WHERE dp.Pedido_idPedido=?";
+        String sql = "SELECT dp.Producto_idProducto,dp.Pedido_idPedido,pr.nombre,"
+                + "pr.precio,dp.cantidadProductos,dp.subtotal "
+                + "FROM DetallePedido dp INNER JOIN Producto pr ON dp.Producto_idProducto=pr.idProducto "
+                + "WHERE dp.Pedido_idPedido=?";
         try (PreparedStatement ps = getConn().prepareStatement(sql)) {
             ps.setInt(1, idPedido);
             try (ResultSet rs = ps.executeQuery()) {
@@ -210,11 +218,25 @@ public class PedidoDAO implements IPedidoDAO {
         List<Pedido> lista = new ArrayList<>();
         String llamada = "{ CALL sp_reporte_pedidos(?, ?, ?) }";
         try (CallableStatement cs = getConn().prepareCall(llamada)) {
-            if (idCliente != null) cs.setInt(1, idCliente); else cs.setNull(1, Types.INTEGER);
-            if (fecha != null)     cs.setDate(2, Date.valueOf(fecha)); else cs.setNull(2, Types.DATE);
-            if (estatus != null)   cs.setString(3, estatus); else cs.setNull(3, Types.VARCHAR);
+            if (idCliente != null) {
+                cs.setInt(1, idCliente);
+            } else {
+                cs.setNull(1, Types.INTEGER);
+            }
+            if (fecha != null) {
+                cs.setDate(2, Date.valueOf(fecha));
+            } else {
+                cs.setNull(2, Types.DATE);
+            }
+            if (estatus != null) {
+                cs.setString(3, estatus);
+            } else {
+                cs.setNull(3, Types.VARCHAR);
+            }
             try (ResultSet rs = cs.executeQuery()) {
-                while (rs.next()) lista.add(mapPedidoReporte(rs));
+                while (rs.next()) {
+                    lista.add(mapPedidoReporte(rs));
+                }
             }
         }
         return lista;
@@ -236,23 +258,29 @@ public class PedidoDAO implements IPedidoDAO {
     private List<Pedido> ejecutarBusqueda(String sql, Integer intParam, String strParam) throws Exception {
         List<Pedido> lista = new ArrayList<>();
         try (PreparedStatement ps = getConn().prepareStatement(sql)) {
-            if (intParam != null) ps.setInt(1, intParam);
-            else if (strParam != null) ps.setString(1, strParam);
+            if (intParam != null) {
+                ps.setInt(1, intParam);
+            } else if (strParam != null) {
+                ps.setString(1, strParam);
+            }
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Pedido p = new Pedido();
                     p.setIdPedido(rs.getInt("idPedido"));
                     p.setFechaHoraPedido(rs.getTimestamp("fechaHoraPedido").toLocalDateTime());
                     p.setNombreCliente(rs.getString("nombreCliente"));
-                    p.setNombreEstatus(rs.getString("estatusActual") != null ?
-                            rs.getString("estatusActual") : rs.getString("nombreEstatus"));
-                    p.setNombreTipoPedido(rs.getString("tipoPedido") != null ?
-                            rs.getString("tipoPedido") : rs.getString("nombreTipoPedido"));
-                    p.setNombreMetodo(rs.getString("metodoPago") != null ?
-                            rs.getString("metodoPago") : rs.getString("metodo"));
-                    p.setNombreEmpleado(rs.getString("empleadoAsignado") != null ?
-                            rs.getString("empleadoAsignado") : rs.getString("nombreEmpleado"));
-                    try { p.setTotal(rs.getDouble("totalPedido")); } catch (SQLException ignored) {}
+                    p.setNombreEstatus(rs.getString("estatusActual") != null
+                            ? rs.getString("estatusActual") : rs.getString("nombreEstatus"));
+                    p.setNombreTipoPedido(rs.getString("tipoPedido") != null
+                            ? rs.getString("tipoPedido") : rs.getString("nombreTipoPedido"));
+                    p.setNombreMetodo(rs.getString("metodoPago") != null
+                            ? rs.getString("metodoPago") : rs.getString("metodo"));
+                    p.setNombreEmpleado(rs.getString("empleadoAsignado") != null
+                            ? rs.getString("empleadoAsignado") : rs.getString("nombreEmpleado"));
+                    try {
+                        p.setTotal(rs.getDouble("totalPedido"));
+                    } catch (SQLException ignored) {
+                    }
                     lista.add(p);
                 }
             }

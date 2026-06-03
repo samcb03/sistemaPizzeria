@@ -43,9 +43,12 @@ public class CsvExporter {
     }
 
     private static String escapeCsv(String valor) {
-        if (valor == null) return "";
-        if (valor.contains(",") || valor.contains("\"") || valor.contains("\n"))
+        if (valor == null) {
+            return "";
+        }
+        if (valor.contains(",") || valor.contains("\"") || valor.contains("\n")) {
             return "\"" + valor.replace("\"", "\"\"") + "\"";
+        }
         return valor;
     }
 }

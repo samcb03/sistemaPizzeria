@@ -21,13 +21,18 @@ import java.util.List;
 
 public class ProductosController {
 
-    @FXML private TableView<Producto>                tblProductos;
-    @FXML private TableColumn<Producto,Integer>      colId;
-    @FXML private TableColumn<Producto,String>       colNombre, colDescripcion;
-    @FXML private TableColumn<Producto,Double>       colPrecio;
-    @FXML private TableColumn<Producto,Integer>      colCantidad, colDisponible;
-
-    @FXML private TextField txtBuscar;
+    @FXML
+    private TableView<Producto> tblProductos;
+    @FXML
+    private TableColumn<Producto, Integer> colId;
+    @FXML
+    private TableColumn<Producto, String> colNombre, colDescripcion;
+    @FXML
+    private TableColumn<Producto, Double> colPrecio;
+    @FXML
+    private TableColumn<Producto, Integer> colCantidad, colDisponible;
+    @FXML
+    private TextField txtBuscar;
 
     private final ProductoDAO dao = new ProductoDAO();
 
@@ -39,28 +44,27 @@ public class ProductosController {
         colPrecio.setCellValueFactory(new PropertyValueFactory<>("precio"));
         colCantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
         colDisponible.setCellValueFactory(new PropertyValueFactory<>("disponible"));
-        
+
         colDisponible.setCellFactory(col -> new TableCell<>() {
-            @Override protected void updateItem(Integer item, boolean empty) {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty || item == null) { 
-                    setText(null); 
-                    setStyle(""); 
-                    return; 
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                    return;
                 }
-                
-                if (item == 0) { 
-                    setText("Inactivo");   
-                    setStyle("-fx-text-fill: #C82429;"); 
+
+                if (item == 0) {
+                    setText("Inactivo");
+                    setStyle("-fx-text-fill: #C82429;");
                 }
-                // AQUÍ EL CAMBIO CLAVE: <= 0 en lugar de == 0
-                else if (getTableView().getItems().get(getIndex()).getCantidad() <= 0) { 
-                    setText("Sin stock");  
-                    setStyle("-fx-text-fill: #F47F23;"); 
-                }
-                else { 
-                    setText("Disponible"); 
-                    setStyle("-fx-text-fill: #16A66E;"); 
+                else if (getTableView().getItems().get(getIndex()).getCantidad() <= 0) {
+                    setText("Sin stock");
+                    setStyle("-fx-text-fill: #F47F23;");
+                } else {
+                    setText("Disponible");
+                    setStyle("-fx-text-fill: #16A66E;");
                 }
             }
         });
@@ -68,73 +72,82 @@ public class ProductosController {
     }
 
     private void cargar() {
-        try { 
+        try {
             tblProductos.setItems(FXCollections.observableArrayList(dao.buscarTodos()));
-        } catch (Exception e) { 
-            Alerta.error("Error", e.getMessage()); 
+        } catch (Exception e) {
+            Alerta.error("Error", e.getMessage());
         }
     }
 
-    @FXML private void onBuscar(ActionEvent e) {
+    @FXML
+    private void onBuscar(ActionEvent e) {
         String txt = txtBuscar.getText().trim();
         try {
             List<Producto> res = txt.isEmpty() ? dao.buscarTodos() : dao.buscarPorNombre(txt);
             tblProductos.setItems(FXCollections.observableArrayList(res));
-        } catch (Exception ex) { 
+        } catch (Exception ex) {
             Alerta.error("Error", ex.getMessage());
         }
     }
 
-    @FXML private void onNuevo(ActionEvent e)  { 
-        abrirForm(null); 
+    @FXML
+    private void onNuevo(ActionEvent e) {
+        abrirForm(null);
     }
-    
-    @FXML private void onEditar(ActionEvent e) {
+
+    @FXML
+    private void onEditar(ActionEvent e) {
         Producto sel = tblProductos.getSelectionModel().getSelectedItem();
-        if (sel == null) { 
-            Alerta.advertencia("Selección", "Selecciona un producto para editar."); 
-            return; 
+        if (sel == null) {
+            Alerta.advertencia("Seleccion", "Selecciona un producto para editar.");
+            return;
         }
         abrirForm(sel);
     }
 
-    @FXML private void onEliminar(ActionEvent e) {
+    @FXML
+    private void onEliminar(ActionEvent e) {
         Producto sel = tblProductos.getSelectionModel().getSelectedItem();
-        if (sel == null) { 
-            Alerta.advertencia("Selección", "Selecciona un producto."); 
-            return; 
+        if (sel == null) {
+            Alerta.advertencia("Seleccion", "Selecciona un producto.");
+            return;
         }
         if (!Alerta.confirmar("Eliminar Producto",
-                "¿Deseas desactivar el producto \"" + sel.getNombre() + "\"?")) return;
+                "¿Deseas desactivar el producto \"" + sel.getNombre() + "\"?")) {
+            return;
+        }
         try {
             dao.eliminarLogico(sel.getIdProducto());
-            Alerta.info("Éxito", "Producto desactivado.");
+            Alerta.info("Exito", "Producto desactivado.");
             cargar();
-        } catch (Exception ex) { 
-            Alerta.error("No se pudo eliminar", ex.getMessage()); 
+        } catch (Exception ex) {
+            Alerta.error("No se pudo eliminar", ex.getMessage());
         }
     }
 
-    @FXML private void onExportarCSV(ActionEvent e) {
+    @FXML
+    private void onExportarCSV(ActionEvent e) {
         FileChooser fc = new FileChooser();
         fc.setTitle("Guardar inventario CSV");
         fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV", "*.csv"));
         fc.setInitialFileName("inventario_productos.csv");
         File archivo = fc.showSaveDialog(tblProductos.getScene().getWindow());
-        if (archivo == null) return;
-        
+        if (archivo == null) {
+            return;
+        }
+
         try {
             CsvExporter.exportarProductos(tblProductos.getItems(), archivo.getAbsolutePath());
-            Alerta.info("Éxito", "Inventario exportado a:\n" + archivo.getAbsolutePath());
-        } catch (Exception ex) { 
-            Alerta.error("Error al exportar", ex.getMessage()); 
+            Alerta.info("Exito", "Inventario exportado a:\n" + archivo.getAbsolutePath());
+        } catch (Exception ex) {
+            Alerta.error("Error al exportar", ex.getMessage());
         }
     }
 
     private void abrirForm(Producto producto) {
         try {
             FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/uv/lis/gui/productos/FormProducto.fxml"));
+                    getClass().getResource("/uv/lis/gui/productos/FormProducto.fxml"));
             Parent root = loader.load();
             FormProductoController ctrl = loader.getController();
             ctrl.setProducto(producto);
@@ -145,8 +158,8 @@ public class ProductosController {
             dlg.setResizable(false);
             dlg.showAndWait();
             cargar(); // Esto recarga la tabla después de cerrar la ventanita
-        } catch (Exception ex) { 
-            Alerta.error("Error", ex.getMessage()); 
+        } catch (Exception ex) {
+            Alerta.error("Error", ex.getMessage());
         }
     }
 }

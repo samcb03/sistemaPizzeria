@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Pedido {
+
     private int idPedido;
     private int idCliente;
     private int idEmpleado;
@@ -20,114 +21,118 @@ public class Pedido {
     private LocalDateTime fechaHoraPedido;
     private List<DetallePedido> detalles = new ArrayList<>();
 
-    public Pedido() {}
-
-    public int getIdPedido() { 
-        return idPedido; 
+    public Pedido() {
     }
 
-    public void setIdPedido(int idPedido) { 
-        this.idPedido = idPedido; 
+    public int getIdPedido() {
+        return idPedido;
     }
 
-    public LocalDateTime getFechaHoraPedido() { 
-        return fechaHoraPedido; 
+    public void setIdPedido(int idPedido) {
+        this.idPedido = idPedido;
     }
 
-    public void setFechaHoraPedido(LocalDateTime fechaHoraPedido) { 
-        this.fechaHoraPedido = fechaHoraPedido; 
-    }
-    public int getIdCliente() { 
-        return idCliente; 
+    public LocalDateTime getFechaHoraPedido() {
+        return fechaHoraPedido;
     }
 
-    public void setIdCliente(int idCliente) { 
-        this.idCliente = idCliente; 
+    public void setFechaHoraPedido(LocalDateTime fechaHoraPedido) {
+        this.fechaHoraPedido = fechaHoraPedido;
     }
 
-    public String getNombreCliente() { 
-        return nombreCliente; 
+    public int getIdCliente() {
+        return idCliente;
     }
 
-    public void setNombreCliente(String nombreCliente) { 
-        this.nombreCliente = nombreCliente; 
+    public void setIdCliente(int idCliente) {
+        this.idCliente = idCliente;
     }
 
-    public int getIdEmpleado() { 
-        return idEmpleado; 
+    public String getNombreCliente() {
+        return nombreCliente;
     }
 
-    public void setIdEmpleado(int idEmpleado) { 
-        this.idEmpleado = idEmpleado; 
+    public void setNombreCliente(String nombreCliente) {
+        this.nombreCliente = nombreCliente;
     }
 
-    public String getNombreEmpleado() { 
-        return nombreEmpleado; 
-    }
-    public void setNombreEmpleado(String nombreEmpleado) { 
-        this.nombreEmpleado = nombreEmpleado; 
+    public int getIdEmpleado() {
+        return idEmpleado;
     }
 
-    public int getIdMetodoPago() { 
-        return idMetodoPago; 
+    public void setIdEmpleado(int idEmpleado) {
+        this.idEmpleado = idEmpleado;
     }
 
-    public void setIdMetodoPago(int idMetodoPago) { 
-        this.idMetodoPago = idMetodoPago; 
+    public String getNombreEmpleado() {
+        return nombreEmpleado;
     }
 
-    public String getNombreMetodo() { 
-        return nombreMetodo; 
+    public void setNombreEmpleado(String nombreEmpleado) {
+        this.nombreEmpleado = nombreEmpleado;
     }
 
-    public void setNombreMetodo(String nombreMetodo) { 
-        this.nombreMetodo = nombreMetodo; 
+    public int getIdMetodoPago() {
+        return idMetodoPago;
     }
 
-    public int getIdTipoPedido() { 
-        return idTipoPedido; 
+    public void setIdMetodoPago(int idMetodoPago) {
+        this.idMetodoPago = idMetodoPago;
     }
 
-    public void setIdTipoPedido(int idTipoPedido) { 
-        this.idTipoPedido = idTipoPedido; 
-    }
-    public String getNombreTipoPedido() { 
-        return nombreTipoPedido; 
+    public String getNombreMetodo() {
+        return nombreMetodo;
     }
 
-    public void setNombreTipoPedido(String nombreTipoPedido) { 
-        this.nombreTipoPedido = nombreTipoPedido; 
+    public void setNombreMetodo(String nombreMetodo) {
+        this.nombreMetodo = nombreMetodo;
     }
 
-    public int getIdTipoEstatus() { 
-        return idTipoEstatus; 
+    public int getIdTipoPedido() {
+        return idTipoPedido;
     }
 
-    public void setIdTipoEstatus(int idTipoEstatus) { 
-        this.idTipoEstatus = idTipoEstatus; 
+    public void setIdTipoPedido(int idTipoPedido) {
+        this.idTipoPedido = idTipoPedido;
     }
 
-    public String getNombreEstatus() { 
-        return nombreEstatus; 
+    public String getNombreTipoPedido() {
+        return nombreTipoPedido;
     }
 
-    public void setNombreEstatus(String nombreEstatus) { 
-        this.nombreEstatus = nombreEstatus; 
+    public void setNombreTipoPedido(String nombreTipoPedido) {
+        this.nombreTipoPedido = nombreTipoPedido;
     }
 
-    public double getTotal() { 
-        return total; 
+    public int getIdTipoEstatus() {
+        return idTipoEstatus;
     }
 
-    public void setTotal(double total) { 
-        this.total = total; 
+    public void setIdTipoEstatus(int idTipoEstatus) {
+        this.idTipoEstatus = idTipoEstatus;
     }
 
-    public List<DetallePedido> getDetalles() { 
-        return detalles; 
+    public String getNombreEstatus() {
+        return nombreEstatus;
     }
 
-    public void setDetalles(List<DetallePedido> detalles) { 
-        this.detalles = detalles; 
+    public void setNombreEstatus(String nombreEstatus) {
+        this.nombreEstatus = nombreEstatus;
+    }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
+
+    public List<DetallePedido> getDetalles() {
+        return detalles;
+    }
+
+    public void setDetalles(List<DetallePedido> detalles) {
+        this.detalles = detalles;
     }
 }

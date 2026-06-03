@@ -17,27 +17,41 @@ import javafx.scene.layout.VBox;
 
 public class DetallePedidoController {
 
-    @FXML private Label lblPedidoId, lblCliente, lblEstatus, lblTotal;
-    @FXML private TableView<DetallePedido>             tblDetalle;
-    @FXML private TableColumn<DetallePedido,String>    colProducto;
-    @FXML private TableColumn<DetallePedido,Integer>   colCantidad;
-    @FXML private TableColumn<DetallePedido,Double>    colPrecio, colSubtotal;
-    @FXML private TableView<BitacoraEstatus>           tblBitacora;
-    @FXML private TableColumn<BitacoraEstatus,String>  colBEstatus, colBFecha, colBEmpleado;
-    @FXML private ComboBox<Producto>                   cbProductoAgregar;
-    @FXML private Spinner<Integer>                     spnCantidad;
-    @FXML private ComboBox<Cliente>                    cbCliente;
-    @FXML private ComboBox<MetodoPago>                 cbMetodoPago;
-    @FXML private ComboBox<TipoPedido>                 cbTipoPedido;
-    @FXML private VBox                                 pnlNuevoPedido;
-    @FXML private VBox                                 pnlDetalle;
+    @FXML
+    private Label lblPedidoId, lblCliente, lblEstatus, lblTotal;
+    @FXML
+    private TableView<DetallePedido> tblDetalle;
+    @FXML
+    private TableColumn<DetallePedido, String> colProducto;
+    @FXML
+    private TableColumn<DetallePedido, Integer> colCantidad;
+    @FXML
+    private TableColumn<DetallePedido, Double> colPrecio, colSubtotal;
+    @FXML
+    private TableView<BitacoraEstatus> tblBitacora;
+    @FXML
+    private TableColumn<BitacoraEstatus, String> colBEstatus, colBFecha, colBEmpleado;
+    @FXML
+    private ComboBox<Producto> cbProductoAgregar;
+    @FXML
+    private Spinner<Integer> spnCantidad;
+    @FXML
+    private ComboBox<Cliente> cbCliente;
+    @FXML
+    private ComboBox<MetodoPago> cbMetodoPago;
+    @FXML
+    private ComboBox<TipoPedido> cbTipoPedido;
+    @FXML
+    private VBox pnlNuevoPedido;
+    @FXML
+    private VBox pnlDetalle;
 
     private Pedido pedido;
     private boolean esNuevo;
-    private final PedidoDAO    pedidoDAO    = new PedidoDAO();
-    private final ProductoDAO  productoDAO  = new ProductoDAO();
-    private final ClienteDAO   clienteDAO   = new ClienteDAO();
-    private final CatalogoDAO  catalogoDAO  = new CatalogoDAO();
+    private final PedidoDAO pedidoDAO = new PedidoDAO();
+    private final ProductoDAO productoDAO = new ProductoDAO();
+    private final ClienteDAO clienteDAO = new ClienteDAO();
+    private final CatalogoDAO catalogoDAO = new CatalogoDAO();
     private final List<DetallePedido> detallesTemp = new ArrayList<>();
 
     @FXML
@@ -49,7 +63,7 @@ public class DetallePedidoController {
         colBEstatus.setCellValueFactory(new PropertyValueFactory<>("estatus"));
         colBFecha.setCellValueFactory(new PropertyValueFactory<>("fechaHora"));
         colBEmpleado.setCellValueFactory(new PropertyValueFactory<>("nombreEmpleado"));
-        spnCantidad.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1,99,1));
+        spnCantidad.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 99, 1));
     }
 
     public void setPedido(Pedido p) {
@@ -77,53 +91,70 @@ public class DetallePedidoController {
             cbMetodoPago.setItems(FXCollections.observableArrayList(catalogoDAO.obtenerMetodosPago()));
             cbTipoPedido.setItems(FXCollections.observableArrayList(catalogoDAO.obtenerTiposPedido()));
             cargarProductosDisponibles();
-        } catch (Exception e) { Alerta.error("Error", e.getMessage()); }
+        } catch (Exception e) {
+            Alerta.error("Error", e.getMessage());
+        }
     }
 
     private void cargarProductosDisponibles() {
-        try { cbProductoAgregar.setItems(FXCollections.observableArrayList(productoDAO.buscarTodos())); }
-        catch (Exception e) { Alerta.error("Error", e.getMessage()); }
+        try {
+            cbProductoAgregar.setItems(FXCollections.observableArrayList(productoDAO.buscarTodos()));
+        } catch (Exception e) {
+            Alerta.error("Error", e.getMessage());
+        }
     }
 
     private void cargarDetalle() {
         try {
             List<DetallePedido> det = pedidoDAO.obtenerDetalle(pedido.getIdPedido());
-            detallesTemp.clear(); detallesTemp.addAll(det);
+            detallesTemp.clear();
+            detallesTemp.addAll(det);
             tblDetalle.setItems(FXCollections.observableArrayList(det));
             actualizarTotal();
-        } catch (Exception e) { Alerta.error("Error", e.getMessage()); }
+        } catch (Exception e) {
+            Alerta.error("Error", e.getMessage());
+        }
     }
 
     private void cargarBitacora() {
-        try { tblBitacora.setItems(FXCollections.observableArrayList(pedidoDAO.obtenerBitacora(pedido.getIdPedido()))); }
-        catch (Exception e) { Alerta.error("Error", e.getMessage()); }
+        try {
+            tblBitacora.setItems(FXCollections.observableArrayList(pedidoDAO.obtenerBitacora(pedido.getIdPedido())));
+        } catch (Exception e) {
+            Alerta.error("Error", e.getMessage());
+        }
     }
 
-    @FXML private void onAgregarProducto(ActionEvent e) {
+    @FXML
+    private void onAgregarProducto(ActionEvent e) {
         Producto prod = cbProductoAgregar.getValue();
-        if (prod == null) return;
+        if (prod == null) {
+            return;
+        }
         int cant = spnCantidad.getValue();
         detallesTemp.stream()
-            .filter(d -> d.getIdProducto() == prod.getIdProducto())
-            .findFirst()
-            .ifPresentOrElse(
-                d -> d.setCantidadProductos(d.getCantidadProductos() + cant),
-                () -> {
-                    DetallePedido d = new DetallePedido();
-                    d.setIdProducto(prod.getIdProducto());
-                    d.setNombreProducto(prod.getNombre());
-                    d.setPrecioUnitario(prod.getPrecio());
-                    d.setCantidadProductos(cant);
-                    d.setSubtotal(prod.getPrecio() * cant);
-                    detallesTemp.add(d);
-                });
+                .filter(d -> d.getIdProducto() == prod.getIdProducto())
+                .findFirst()
+                .ifPresentOrElse(
+                        d -> d.setCantidadProductos(d.getCantidadProductos() + cant),
+                        () -> {
+                            DetallePedido d = new DetallePedido();
+                            d.setIdProducto(prod.getIdProducto());
+                            d.setNombreProducto(prod.getNombre());
+                            d.setPrecioUnitario(prod.getPrecio());
+                            d.setCantidadProductos(cant);
+                            d.setSubtotal(prod.getPrecio() * cant);
+                            detallesTemp.add(d);
+                        });
         tblDetalle.setItems(FXCollections.observableArrayList(detallesTemp));
         actualizarTotal();
     }
 
-    @FXML private void onQuitarProducto(ActionEvent e) {
+    @FXML
+    private void onQuitarProducto(ActionEvent e) {
         DetallePedido sel = tblDetalle.getSelectionModel().getSelectedItem();
-        if (sel == null) return;
+        if (sel == null) {
+            return;
+        }
         detallesTemp.remove(sel);
         tblDetalle.setItems(FXCollections.observableArrayList(detallesTemp));
         actualizarTotal();
@@ -131,19 +162,22 @@ public class DetallePedidoController {
 
     private void actualizarTotal() {
         double total = detallesTemp.stream().mapToDouble(d -> d.getPrecioUnitario() * d.getCantidadProductos()).sum();
-        if (lblTotal != null) lblTotal.setText(String.format("Total: $%.2f", total));
+        if (lblTotal != null) {
+            lblTotal.setText(String.format("Total: $%.2f", total));
+        }
     }
 
-    @FXML private void onGuardar(ActionEvent e) {
-        if (detallesTemp.isEmpty()) { 
-            Alerta.advertencia("Vacío", "Agrega al menos un producto."); 
-            return; 
+    @FXML
+    private void onGuardar(ActionEvent e) {
+        if (detallesTemp.isEmpty()) {
+            Alerta.advertencia("Vacio", "Agrega al menos un producto.");
+            return;
         }
-        
+
         try {
             if (esNuevo) {
                 if (cbCliente.getValue() == null || cbMetodoPago.getValue() == null || cbTipoPedido.getValue() == null) {
-                    Alerta.advertencia("Datos incompletos", "Selecciona cliente, método de pago y tipo.");
+                    Alerta.advertencia("Datos incompletos", "Selecciona cliente, metodo de pago y tipo.");
                     return;
                 }
 
@@ -156,20 +190,22 @@ public class DetallePedidoController {
 
                 int idNuevo = pedidoDAO.crear(nuevo);
 
-                Alerta.info("Éxito", "Pedido #" + idNuevo + " creado correctamente.");
+                Alerta.info("Exito", "Pedido #" + idNuevo + " creado correctamente.");
 
             } else {
                 pedidoDAO.actualizarDetalle(pedido.getIdPedido(), detallesTemp);
-                Alerta.info("Éxito", "Pedido actualizado correctamente.");
+                Alerta.info("Exito", "Pedido actualizado correctamente.");
             }
-            
+
             ((Stage) tblDetalle.getScene().getWindow()).close();
-            
-        } catch (Exception ex) { 
-            Alerta.error("Error", ex.getMessage()); 
+
+        } catch (Exception ex) {
+            Alerta.error("Error", ex.getMessage());
         }
     }
-    @FXML private void onCancelar(ActionEvent e) { 
-        ((Stage) tblDetalle.getScene().getWindow()).close(); 
+
+    @FXML
+    private void onCancelar(ActionEvent e) {
+        ((Stage) tblDetalle.getScene().getWindow()).close();
     }
 }

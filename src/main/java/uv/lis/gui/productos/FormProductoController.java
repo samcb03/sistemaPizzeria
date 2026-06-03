@@ -26,9 +26,11 @@ public class FormProductoController {
         this.producto = p; this.editando = p != null;
         if (editando) {
             lblTitulo.setText("Editar Producto");
-            txtNombre.setText(p.getNombre());
-            txtDescripcion.setText(p.getDescripcion());
-            txtRestricciones.setText(p.getRestricciones());
+            
+            // Asignación segura: si viene nulo de la BD, ponemos ""
+            txtNombre.setText(p.getNombre() == null ? "" : p.getNombre());
+            txtDescripcion.setText(p.getDescripcion() == null ? "" : p.getDescripcion());
+            txtRestricciones.setText(p.getRestricciones() == null ? "" : p.getRestricciones());
             txtPrecio.setText(String.valueOf(p.getPrecio()));
             txtCantidad.setText(String.valueOf(p.getCantidad()));
             chkPreparado.setSelected(p.getEsPreparado() == 1);
@@ -38,11 +40,19 @@ public class FormProductoController {
     @FXML private void onGuardar(ActionEvent e) {
         if (!validar()) 
             return;
+            
         try {
             Producto p = editando ? producto : new Producto();
-            p.setNombre(txtNombre.getText().trim());
-            p.setDescripcion(txtDescripcion.getText().trim());
-            p.setRestricciones(txtRestricciones.getText().trim());
+            
+            // Lectura segura: si el campo es nulo, le hacemos trim() a un ""
+            String nombre = txtNombre.getText() == null ? "" : txtNombre.getText().trim();
+            String desc = txtDescripcion.getText() == null ? "" : txtDescripcion.getText().trim();
+            String rest = txtRestricciones.getText() == null ? "" : txtRestricciones.getText().trim();
+            
+            p.setNombre(nombre);
+            p.setDescripcion(desc);
+            p.setRestricciones(rest);
+            
             p.setPrecio(Double.parseDouble(txtPrecio.getText().trim()));
             p.setCantidad(Integer.parseInt(txtCantidad.getText().trim()));
             p.setEsPreparado(chkPreparado.isSelected() ? 1 : 0);
@@ -52,7 +62,10 @@ public class FormProductoController {
 
             Alerta.info("Éxito", "Producto " + (editando ? "actualizado" : "registrado") + " correctamente.");
             ((Stage) txtNombre.getScene().getWindow()).close();
-        } catch (Exception ex) { lblError.setText(ex.getMessage()); }
+            
+        } catch (Exception ex) { 
+            lblError.setText(ex.getMessage()); 
+        }
     }
 
     @FXML private void onCancelar(ActionEvent e) { 
@@ -60,15 +73,25 @@ public class FormProductoController {
     }
 
     private boolean validar() {
-        if (txtNombre.getText().isBlank() || txtPrecio.getText().isBlank()) {
+        // Extracción segura para las validaciones
+        String nom = txtNombre.getText() == null ? "" : txtNombre.getText();
+        String pre = txtPrecio.getText() == null ? "" : txtPrecio.getText();
+        String cant = txtCantidad.getText() == null ? "" : txtCantidad.getText();
+
+        if (nom.isBlank() || pre.isBlank()) {
             lblError.setText("Nombre y precio son obligatorios."); return false;
         }
-        try { Double.parseDouble(txtPrecio.getText().trim()); } catch (NumberFormatException ex) {
+        try { 
+            Double.parseDouble(pre.trim()); 
+        } catch (NumberFormatException ex) {
             lblError.setText("El precio debe ser un número."); return false;
         }
-        try { Integer.parseInt(txtCantidad.getText().trim()); } catch (NumberFormatException ex) {
+        try { 
+            Integer.parseInt(cant.trim()); 
+        } catch (NumberFormatException ex) {
             lblError.setText("La cantidad debe ser un número entero."); return false;
         }
+        
         lblError.setText(""); return true;
     }
 }

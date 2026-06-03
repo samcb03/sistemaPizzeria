@@ -255,4 +255,68 @@ public class PedidoDAO implements IPedidoDAO {
         }
         return lista;
     }
+
+ // --------------------------------------------------------
+    // sp_registrar_pedido
+    // Llamar desde DetallePedidoController al guardar un pedido
+    // nuevo, en lugar del INSERT directo que haya en Java.
+    //
+    // Devuelve el id del pedido recién creado, o -1 si falló.
+    // --------------------------------------------------------
+    public int registrarPedido(int idCliente, int idEmpleado,
+                               int idTipoPedido, int idMetodo)
+            throws SQLException {
+
+        String sql = "{CALL sp_registrar_pedido(?, ?, ?, ?, ?, ?)}";
+
+        // Implementación con try-with-resources y getConn()
+        try (Connection conn = getConn(); 
+             CallableStatement cs = conn.prepareCall(sql)) {
+
+            cs.setInt(1, idCliente);
+            cs.setInt(2, idEmpleado);
+            cs.setInt(3, idTipoPedido);
+            cs.setInt(4, idMetodo);
+            cs.registerOutParameter(5, Types.INTEGER); // p_idNuevoPedido
+            cs.registerOutParameter(6, Types.VARCHAR); // p_mensaje
+
+            cs.execute();
+
+            String mensaje = cs.getString(6);
+            System.out.println("sp_registrar_pedido: " + mensaje);
+
+            int idNuevo = cs.getInt(5);
+            return cs.wasNull() ? -1 : idNuevo;
+        }
+    }
+
+    // --------------------------------------------------------
+    // sp_cancelar_pedido
+    // Llamar desde CambiarEstatusController cuando el usuario
+    // elige "Cancelado" en el ComboBox de estatus.
+    //
+    // Devuelve el mensaje de resultado del SP.
+    // --------------------------------------------------------
+    public String cancelarPedido(int idPedido, int idEmpleado)
+            throws SQLException {
+
+        String sql = "{CALL sp_cancelar_pedido(?, ?, ?)}";
+
+        // Implementación con try-with-resources y getConn()
+        try (Connection conn = getConn(); 
+             CallableStatement cs = conn.prepareCall(sql)) {
+
+            cs.setInt(1, idPedido);
+            cs.setInt(2, idEmpleado);
+            cs.registerOutParameter(3, Types.VARCHAR); // p_mensaje
+
+            cs.execute();
+
+            return cs.getString(3);
+        }
+    }
+
+
+
+
 }

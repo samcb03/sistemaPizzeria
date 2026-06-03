@@ -31,15 +31,44 @@ public class CambiarEstatusController {
     }
 
     @FXML private void onGuardar(ActionEvent e) {
-        if (cbNuevoEstatus.getValue() == null) { lblError.setText("Selecciona un estatus."); return; }
-        if (!Alerta.confirmar("Confirmar", "¿Cambiar estatus a \"" + cbNuevoEstatus.getValue() + "\"?")) return;
+        String estatusElegido = cbNuevoEstatus.getValue();
+        
+        if (estatusElegido == null) { 
+            lblError.setText("Selecciona un estatus."); 
+            return; 
+        }
+        
+        // Pequeña validación extra para evitar llamadas innecesarias a la BD
+        if (estatusElegido.equals(pedido.getNombreEstatus())) {
+            lblError.setText("El pedido ya se encuentra en ese estatus.");
+            return;
+        }
+
+        if (!Alerta.confirmar("Confirmar", "¿Cambiar estatus a \"" + estatusElegido + "\"?")) {
+            return; 
+        }
+        
         try {
-            dao.cambiarEstatus(pedido.getIdPedido(), cbNuevoEstatus.getValue(),
-                    Sesion.getInstance().getEmpleadoActual().getIdUsuario());
-            Alerta.info("Éxito", "Estatus actualizado correctamente.");
+            int idEmpleado = Sesion.getInstance().getEmpleadoActual().getIdUsuario();
+            String mensaje;
+
+            // Aquí integramos la bifurcación lógica para usar el Procedimiento Almacenado correcto
+            if ("Cancelado".equals(estatusElegido)) {
+                mensaje = dao.cancelarPedido(pedido.getIdPedido(), idEmpleado);
+            } else {
+                dao.cambiarEstatus(pedido.getIdPedido(), estatusElegido, idEmpleado);
+                mensaje = "Estatus actualizado correctamente.";
+            }
+
+            Alerta.info("Éxito", mensaje);
             ((Stage) cbNuevoEstatus.getScene().getWindow()).close();
-        } catch (Exception ex) { lblError.setText(ex.getMessage()); }
+            
+        } catch (Exception ex) { 
+            lblError.setText(ex.getMessage()); 
+        }
     }
 
-    @FXML private void onCancelar(ActionEvent e) { ((Stage) cbNuevoEstatus.getScene().getWindow()).close(); }
+    @FXML private void onCancelar(ActionEvent e) { 
+        ((Stage) cbNuevoEstatus.getScene().getWindow()).close(); 
+    }
 }

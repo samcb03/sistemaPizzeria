@@ -14,10 +14,14 @@ import uv.lis.modelo.dominio.Empleado;
 
 public class LoginController {
 
-    @FXML private TextField txtUsuario;
-    @FXML private PasswordField txtContrasena;
-    @FXML private Label lblError;
-    @FXML private Button btnIngresar;
+    @FXML
+    private TextField txtUsuario;
+    @FXML
+    private PasswordField txtContrasena;
+    @FXML
+    private Label lblError;
+    @FXML
+    private Button btnIngresar;
 
     private final EmpleadoDAO empleadoDAO = new EmpleadoDAO();
 
@@ -46,6 +50,8 @@ public class LoginController {
             Sesion.getInstance().setEmpleadoActual(empleado);
             abrirMenuPrincipal();
         } catch (Exception e) {
+            e.printStackTrace(); 
+
             Alerta.error("Error de conexión", "No se pudo conectar con la base de datos.\n" + e.getMessage());
         }
     }
@@ -57,11 +63,13 @@ public class LoginController {
 
     private void abrirMenuPrincipal() throws Exception {
         Parent root = FXMLLoader.load(
-            getClass().getResource("/uv/lis/gui/main/MenuPrincipal.fxml"));
+                getClass().getResource("/uv/lis/gui/main/MenuPrincipal.fxml"));
+
         Stage stage = (Stage) btnIngresar.getScene().getWindow();
         stage.setScene(new Scene(root));
         stage.setResizable(true);
         stage.setMaximized(true);
         stage.setTitle("Italia Pizza — Panel de Administración");
     }
+
 }

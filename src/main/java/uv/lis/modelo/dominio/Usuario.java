@@ -7,12 +7,12 @@ public class Usuario {
     private String apellidoPaterno;
     private String apellidoMaterno;
     private String ciudad;
+
     private String telefono;
     private String email;
+    private Rol rol;
 
-    public Usuario() {
-
-    }
+    public Usuario() { }
 
     public int getIdUsuario() { 
         return idUsuario; 

@@ -15,14 +15,20 @@ import java.util.List;
 
 public class FormEmpleadoController {
 
-    @FXML private Label         lblTitulo;
-    @FXML private TextField     txtNombre, txtApPat, txtApMat, txtCiudad, txtTel, txtEmail, txtUsername;
+    @FXML private Label lblTitulo;
+    @FXML private TextField txtNombre;
+    @FXML private TextField txtApellidoPaterno;
+    @FXML private TextField txtApellidoMaterno;
+    @FXML private TextField txtCiudad;
+    @FXML private TextField txtTelefono;
+    @FXML private TextField txtEmail;
+    @FXML private TextField txtUsername;
     @FXML private PasswordField txtPass;
     @FXML private ComboBox<Rol> cbRol;
     @FXML private Label         lblError;
 
-    private Empleado         empleado;
-    private boolean          editando = false;
+    private Empleado empleado;
+    private boolean editando = false;
     private final EmpleadoDAO  empleadoDAO  = new EmpleadoDAO();
     private final CatalogoDAO  catalogoDAO  = new CatalogoDAO();
 
@@ -43,8 +49,8 @@ public class FormEmpleadoController {
         if (editando) {
             lblTitulo.setText("Editar Empleado");
             txtNombre.setText(e.getNombre());
-            txtApPat.setText(e.getApellidoPaterno());
-            txtApMat.setText(e.getApellidoMaterno());
+            txtApellidoPaterno.setText(e.getApellidoPaterno());
+            txtApellidoMaterno.setText(e.getApellidoMaterno());
             txtCiudad.setText(e.getCiudad());
             txtUsername.setText(e.getUsername());
             txtPass.setPromptText("Dejar vacío para no cambiar");
@@ -58,15 +64,16 @@ public class FormEmpleadoController {
         try {
             Empleado emp = editando ? empleado : new Empleado();
             emp.setNombre(txtNombre.getText().trim());
-            emp.setApellidoPaterno(txtApPat.getText().trim());
-            emp.setApellidoMaterno(txtApMat.getText().trim());
+            emp.setApellidoPaterno(txtApellidoPaterno.getText().trim());
+            emp.setApellidoMaterno(txtApellidoMaterno.getText().trim());
             emp.setCiudad(txtCiudad.getText().trim());
             emp.setUsername(txtUsername.getText().trim());
             emp.setRol(cbRol.getValue());
             if (!txtPass.getText().isBlank()) emp.setContrasena(txtPass.getText());
 
-            if (editando) empleadoDAO.actualizar(emp, txtTel.getText().trim(), txtEmail.getText().trim());
-            else          empleadoDAO.registrar(emp, txtTel.getText().trim(), txtEmail.getText().trim());
+            if (editando) empleadoDAO.actualizar(emp, txtTelefono.getText().trim(), txtEmail.getText().trim());
+            else          
+                empleadoDAO.registrar(emp, txtTelefono.getText().trim(), txtEmail.getText().trim());
 
             Alerta.info("Éxito", "Empleado " + (editando ? "actualizado" : "registrado") + " correctamente.");
             cerrar();
@@ -75,10 +82,12 @@ public class FormEmpleadoController {
         }
     }
 
-    @FXML private void onCancelar(ActionEvent event) { cerrar(); }
+    @FXML private void onCancelar(ActionEvent event) { 
+        cerrar(); 
+    }
 
     private boolean validar() {
-        if (txtNombre.getText().isBlank() || txtApPat.getText().isBlank() ||
+        if (txtNombre.getText().isBlank() || txtApellidoPaterno.getText().isBlank() ||
             txtUsername.getText().isBlank() || cbRol.getValue() == null) {
             lblError.setText("Todos los campos marcados con * son obligatorios.");
             return false;
@@ -91,5 +100,7 @@ public class FormEmpleadoController {
         return true;
     }
 
-    private void cerrar() { ((Stage) txtNombre.getScene().getWindow()).close(); }
+    private void cerrar() { 
+        ((Stage) txtNombre.getScene().getWindow()).close(); 
+    }
 }

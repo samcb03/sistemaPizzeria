@@ -15,11 +15,12 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 
 public class InventarioController {
-
-    @FXML private TableView<InventarioDetalle>              tblInventario;
-    @FXML private TableColumn<InventarioDetalle,String>     colProducto, colResultado;
-    @FXML private TableColumn<InventarioDetalle,Integer>    colSistema, colReal, colDiferencia;
-
+    @FXML private TableView<InventarioDetalle> tblInventario;
+    @FXML private TableColumn<InventarioDetalle, String> colProducto;
+    @FXML private TableColumn<InventarioDetalle, String> colResultado;
+    @FXML private TableColumn<InventarioDetalle, Integer> colSistema;
+    @FXML private TableColumn<InventarioDetalle, Integer> colReal;
+    @FXML private TableColumn<InventarioDetalle, Integer> colDiferencia;
     private final InventarioDAO dao = new InventarioDAO();
 
     @FXML public void initialize() {

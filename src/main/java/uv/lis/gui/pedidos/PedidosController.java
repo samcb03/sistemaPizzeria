@@ -19,6 +19,7 @@ import uv.lis.modelo.dominio.Pedido;
 import java.io.File;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PedidosController {
 
@@ -62,25 +63,50 @@ public class PedidosController {
     }
 
     private void cargar() {
-        // Carga inicial via procedimiento almacenado (los tres filtros en NULL = todos).
-        try { tblPedidos.setItems(FXCollections.observableArrayList(dao.reportePedidos(null, null, null))); }
+        try { tblPedidos.setItems(FXCollections.observableArrayList(dao.buscarTodos())); }
         catch (Exception e) { Alerta.error("Error", e.getMessage()); }
     }
 
-    @FXML private void onBuscar(ActionEvent e) {
+@FXML private void onBuscar(ActionEvent e) {
         try {
+            List<Pedido> res;
             LocalDate fecha = dpFecha.getValue();
             String estatus  = cbEstatus.getValue();
-            String estatusParam = (estatus == null || estatus.equals("Todos")) ? null : estatus;
-            // Un solo procedimiento combina ambos filtros (fecha y/o estatus).
-            List<Pedido> res = dao.reportePedidos(null, fecha, estatusParam);
+            String clienteStr = txtBuscarCliente.getText() == null ? "" : txtBuscarCliente.getText().trim().toLowerCase();
+
+            // 1. Búsqueda principal en base de datos
+            if (fecha != null)
+                res = dao.buscarPorFecha(fecha);
+            else if (estatus != null && !estatus.equals("Todos"))
+                res = dao.buscarPorEstatus(estatus);
+            else
+                res = dao.buscarTodos();
+
+            // 2. Filtro en memoria por nombre del cliente
+            if (!clienteStr.isEmpty()) {
+                res = res.stream()
+                         .filter(p -> p.getNombreCliente() != null && 
+                                      p.getNombreCliente().toLowerCase().contains(clienteStr))
+                         .collect(Collectors.toList());
+            }
+
             tblPedidos.setItems(FXCollections.observableArrayList(res));
-        } catch (Exception ex) { Alerta.error("Error", ex.getMessage()); }
+            
+        } catch (Exception ex) { 
+            Alerta.error("Error", ex.getMessage()); 
+        }
     }
 
-    @FXML private void onLimpiar(ActionEvent e) { dpFecha.setValue(null); cbEstatus.setValue("Todos"); cargar(); }
+    @FXML private void onLimpiar(ActionEvent e) { 
+        dpFecha.setValue(null); 
+        cbEstatus.setValue("Todos"); 
+        txtBuscarCliente.setText(""); // Ahora también limpia la caja de texto
+        cargar(); 
+    }
 
-    @FXML private void onNuevoPedido(ActionEvent e) { abrirDetalle(null); }
+    @FXML private void onNuevoPedido(ActionEvent e) { 
+        abrirDetalle(null); 
+    }
 
     @FXML private void onVerDetalle(ActionEvent e) {
         Pedido sel = tblPedidos.getSelectionModel().getSelectedItem();

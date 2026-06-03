@@ -20,24 +20,25 @@ public class FormClienteController {
     private boolean       editando = false;
     private final ClienteDAO dao = new ClienteDAO();
 
-    public void setCliente(Cliente c) {
-        this.cliente  = c;
-        this.editando = c != null;
+    public void setCliente(Cliente cliente) {
+        this.cliente  = cliente;
+        this.editando = cliente != null;
         if (editando) {
             lblTitulo.setText("Editar Cliente");
-            txtNombre.setText(c.getNombre());
-            txtApPat.setText(c.getApellidoPaterno());
-            txtApMat.setText(c.getApellidoMaterno());
-            txtCiudad.setText(c.getCiudad());
-            txtCalleNum.setText(String.valueOf(c.getCalleNumero()));
-            txtColonia.setText(c.getColonia());
-            txtCP.setText(String.valueOf(c.getCodigoPostal()));
+            txtNombre.setText(cliente.getNombre());
+            txtApPat.setText(cliente.getApellidoPaterno());
+            txtApMat.setText(cliente.getApellidoMaterno());
+            txtCiudad.setText(cliente.getCiudad());
+            txtCalleNum.setText(String.valueOf(cliente.getCalleNumero()));
+            txtColonia.setText(cliente.getColonia());
+            txtCP.setText(String.valueOf(cliente.getCodigoPostal()));
         }
     }
 
     @FXML
     private void onGuardar(ActionEvent event) {
-        if (!validar()) return;
+        if (!validar()) 
+            return;
         try {
             Cliente c = editando ? cliente : new Cliente();
             c.setNombre(txtNombre.getText().trim());

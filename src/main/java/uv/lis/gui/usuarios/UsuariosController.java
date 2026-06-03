@@ -1,6 +1,7 @@
 package uv.lis.gui.usuarios;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,8 +18,10 @@ import uv.lis.modelo.dao.impl.EmpleadoDAO;
 import uv.lis.modelo.dominio.Cliente;
 import uv.lis.modelo.dominio.Empleado;
 
+import java.util.ArrayList;
 import java.util.List;
 
+//NOTA
 public class UsuariosController {
 
     // ── Tabla Clientes ──

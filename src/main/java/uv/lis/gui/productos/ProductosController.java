@@ -39,24 +39,40 @@ public class ProductosController {
         colPrecio.setCellValueFactory(new PropertyValueFactory<>("precio"));
         colCantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
         colDisponible.setCellValueFactory(new PropertyValueFactory<>("disponible"));
+        
         colDisponible.setCellFactory(col -> new TableCell<>() {
             @Override protected void updateItem(Integer item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty || item == null) { setText(null); setStyle(""); return; }
-                if (item == 0)      { setText("Inactivo");   setStyle("-fx-text-fill: #C82429;"); }
-                else if (getTableView().getItems().get(getIndex()).getCantidad() == 0)
-                                    { setText("Sin stock");  setStyle("-fx-text-fill: #F47F23;"); }
-                else                { setText("Disponible"); setStyle("-fx-text-fill: #16A66E;"); }
+                if (empty || item == null) { 
+                    setText(null); 
+                    setStyle(""); 
+                    return; 
+                }
+                
+                if (item == 0) { 
+                    setText("Inactivo");   
+                    setStyle("-fx-text-fill: #C82429;"); 
+                }
+                // AQUÍ EL CAMBIO CLAVE: <= 0 en lugar de == 0
+                else if (getTableView().getItems().get(getIndex()).getCantidad() <= 0) { 
+                    setText("Sin stock");  
+                    setStyle("-fx-text-fill: #F47F23;"); 
+                }
+                else { 
+                    setText("Disponible"); 
+                    setStyle("-fx-text-fill: #16A66E;"); 
+                }
             }
         });
         cargar();
     }
 
     private void cargar() {
-        try { tblProductos.setItems(FXCollections.observableArrayList(dao.buscarTodos()));
-            
+        try { 
+            tblProductos.setItems(FXCollections.observableArrayList(dao.buscarTodos()));
         } catch (Exception e) { 
-            Alerta.error("Error", e.getMessage()); }
+            Alerta.error("Error", e.getMessage()); 
+        }
     }
 
     @FXML private void onBuscar(ActionEvent e) {
@@ -75,20 +91,28 @@ public class ProductosController {
     
     @FXML private void onEditar(ActionEvent e) {
         Producto sel = tblProductos.getSelectionModel().getSelectedItem();
-        if (sel == null) { Alerta.advertencia("Selección", "Selecciona un producto para editar."); return; }
+        if (sel == null) { 
+            Alerta.advertencia("Selección", "Selecciona un producto para editar."); 
+            return; 
+        }
         abrirForm(sel);
     }
 
     @FXML private void onEliminar(ActionEvent e) {
         Producto sel = tblProductos.getSelectionModel().getSelectedItem();
-        if (sel == null) { Alerta.advertencia("Selección", "Selecciona un producto."); return; }
+        if (sel == null) { 
+            Alerta.advertencia("Selección", "Selecciona un producto."); 
+            return; 
+        }
         if (!Alerta.confirmar("Eliminar Producto",
                 "¿Deseas desactivar el producto \"" + sel.getNombre() + "\"?")) return;
         try {
             dao.eliminarLogico(sel.getIdProducto());
             Alerta.info("Éxito", "Producto desactivado.");
             cargar();
-        } catch (Exception ex) { Alerta.error("No se pudo eliminar", ex.getMessage()); }
+        } catch (Exception ex) { 
+            Alerta.error("No se pudo eliminar", ex.getMessage()); 
+        }
     }
 
     @FXML private void onExportarCSV(ActionEvent e) {
@@ -98,10 +122,13 @@ public class ProductosController {
         fc.setInitialFileName("inventario_productos.csv");
         File archivo = fc.showSaveDialog(tblProductos.getScene().getWindow());
         if (archivo == null) return;
+        
         try {
             CsvExporter.exportarProductos(tblProductos.getItems(), archivo.getAbsolutePath());
             Alerta.info("Éxito", "Inventario exportado a:\n" + archivo.getAbsolutePath());
-        } catch (Exception ex) { Alerta.error("Error al exportar", ex.getMessage()); }
+        } catch (Exception ex) { 
+            Alerta.error("Error al exportar", ex.getMessage()); 
+        }
     }
 
     private void abrirForm(Producto producto) {
@@ -117,7 +144,9 @@ public class ProductosController {
             dlg.setScene(new Scene(root));
             dlg.setResizable(false);
             dlg.showAndWait();
-            cargar();
-        } catch (Exception ex) { Alerta.error("Error", ex.getMessage()); }
+            cargar(); // Esto recarga la tabla después de cerrar la ventanita
+        } catch (Exception ex) { 
+            Alerta.error("Error", ex.getMessage()); 
+        }
     }
 }

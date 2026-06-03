@@ -38,7 +38,6 @@ public class CambiarEstatusController {
             return; 
         }
         
-        // Pequeña validación extra para evitar llamadas innecesarias a la BD
         if (estatusElegido.equals(pedido.getNombreEstatus())) {
             lblError.setText("El pedido ya se encuentra en ese estatus.");
             return;
@@ -50,17 +49,9 @@ public class CambiarEstatusController {
         
         try {
             int idEmpleado = Sesion.getInstance().getEmpleadoActual().getIdUsuario();
-            String mensaje;
+            dao.cambiarEstatus(pedido.getIdPedido(), estatusElegido, idEmpleado);
 
-            // Aquí integramos la bifurcación lógica para usar el Procedimiento Almacenado correcto
-            if ("Cancelado".equals(estatusElegido)) {
-                mensaje = dao.cancelarPedido(pedido.getIdPedido(), idEmpleado);
-            } else {
-                dao.cambiarEstatus(pedido.getIdPedido(), estatusElegido, idEmpleado);
-                mensaje = "Estatus actualizado correctamente.";
-            }
-
-            Alerta.info("Éxito", mensaje);
+            Alerta.info("Éxito", "Estatus actualizado a \"" + estatusElegido + "\" correctamente.");
             ((Stage) cbNuevoEstatus.getScene().getWindow()).close();
             
         } catch (Exception ex) { 

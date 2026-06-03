@@ -4,10 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-/**
- * ConexionBD — Singleton de conexión a MySQL.
- * Italia Pizza | FEI-UV 2025
- */
 public class ConexionBD {
 
     private static final String HOST     = "localhost";

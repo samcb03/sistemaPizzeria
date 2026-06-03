@@ -25,7 +25,7 @@
                     <MenuItem fx:id="miCerrarSesion" onAction="#onCerrarSesion" text="🔒  Cerrar Sesión" />
                 </Menu>
 
-                <Menu style="-fx-text-fill: white;" text="Inventarios">
+                <Menu fx:id="menuInventarios" style="-fx-text-fill: white;" text="Inventarios">
                     <MenuItem onAction="#onProductos" text="🍕  Productos" />
                     <MenuItem onAction="#onInventario" text="📦  Reporte de Inventario" />
                     <MenuItem onAction="#onValidarInv" text="✔   Validar Inventario" />

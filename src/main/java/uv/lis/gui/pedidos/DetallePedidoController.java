@@ -23,7 +23,7 @@ public class DetallePedidoController {
     @FXML private TableColumn<DetallePedido,Integer>   colCantidad;
     @FXML private TableColumn<DetallePedido,Double>    colPrecio, colSubtotal;
     @FXML private TableView<BitacoraEstatus>           tblBitacora;
-    @FXML private TableColumn<BitacoraEstatus,String>  colBEstatus, colBFecha;
+    @FXML private TableColumn<BitacoraEstatus,String>  colBEstatus, colBFecha, colBEmpleado;
     @FXML private ComboBox<Producto>                   cbProductoAgregar;
     @FXML private Spinner<Integer>                     spnCantidad;
     @FXML private ComboBox<Cliente>                    cbCliente;
@@ -48,6 +48,7 @@ public class DetallePedidoController {
         colSubtotal.setCellValueFactory(new PropertyValueFactory<>("subtotal"));
         colBEstatus.setCellValueFactory(new PropertyValueFactory<>("estatus"));
         colBFecha.setCellValueFactory(new PropertyValueFactory<>("fechaHora"));
+        colBEmpleado.setCellValueFactory(new PropertyValueFactory<>("nombreEmpleado"));
         spnCantidad.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1,99,1));
     }
 
@@ -102,7 +103,6 @@ public class DetallePedidoController {
         Producto prod = cbProductoAgregar.getValue();
         if (prod == null) return;
         int cant = spnCantidad.getValue();
-        // Verificar si ya está en la lista
         detallesTemp.stream()
             .filter(d -> d.getIdProducto() == prod.getIdProducto())
             .findFirst()
@@ -134,7 +134,7 @@ public class DetallePedidoController {
         if (lblTotal != null) lblTotal.setText(String.format("Total: $%.2f", total));
     }
 
-@FXML private void onGuardar(ActionEvent e) {
+    @FXML private void onGuardar(ActionEvent e) {
         if (detallesTemp.isEmpty()) { 
             Alerta.advertencia("Vacío", "Agrega al menos un producto."); 
             return; 
@@ -142,39 +142,27 @@ public class DetallePedidoController {
         
         try {
             if (esNuevo) {
-                // 1. Validar que los campos obligatorios estén seleccionados
                 if (cbCliente.getValue() == null || cbMetodoPago.getValue() == null || cbTipoPedido.getValue() == null) {
-                    Alerta.advertencia("Datos incompletos", "Selecciona cliente, método de pago y tipo."); 
+                    Alerta.advertencia("Datos incompletos", "Selecciona cliente, método de pago y tipo.");
                     return;
                 }
-                
-                // 2. Extraer los IDs de los objetos seleccionados
-                int idCliente = cbCliente.getValue().getIdUsuario();
-                int idEmpleado = Sesion.getInstance().getEmpleadoActual().getIdUsuario(); // Asegúrate que este sea el getter correcto
-                int idMetodo = cbMetodoPago.getValue().getIdMetodo();
-                int idTipoPedido = cbTipoPedido.getValue().getIdTipoPedido();
-                
-                // 3. Llamar al Procedimiento Almacenado en lugar de usar pedidoDAO.crear()
-                int idNuevo = pedidoDAO.registrarPedido(idCliente, idEmpleado, idTipoPedido, idMetodo);
-                
-                // 4. Validar si falló la creación en BD
-                if (idNuevo == -1) {
-                    Alerta.error("Error", "No se pudo registrar el encabezado del pedido.");
-                    return;
-                }
-                
-                // 5. Insertar todos los productos del carrito (detalles)
-                pedidoDAO.actualizarDetalle(idNuevo, detallesTemp);
-                
+
+                Pedido nuevo = new Pedido();
+                nuevo.setIdCliente(cbCliente.getValue().getIdUsuario());
+                nuevo.setIdEmpleado(Sesion.getInstance().getEmpleadoActual().getIdUsuario());
+                nuevo.setIdMetodoPago(cbMetodoPago.getValue().getIdMetodo());
+                nuevo.setIdTipoPedido(cbTipoPedido.getValue().getIdTipoPedido());
+                nuevo.setDetalles(detallesTemp);
+
+                int idNuevo = pedidoDAO.crear(nuevo);
+
                 Alerta.info("Éxito", "Pedido #" + idNuevo + " creado correctamente.");
-                
+
             } else {
-                // Lógica intacta para cuando solo se edita un pedido existente
                 pedidoDAO.actualizarDetalle(pedido.getIdPedido(), detallesTemp);
                 Alerta.info("Éxito", "Pedido actualizado correctamente.");
             }
             
-            // Cerrar la ventana al terminar
             ((Stage) tblDetalle.getScene().getWindow()).close();
             
         } catch (Exception ex) { 

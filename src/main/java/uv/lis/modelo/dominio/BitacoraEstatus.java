@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 public class BitacoraEstatus {
     private String nombreCliente;
+    private String nombreEmpleado;
     private String estatus;
     private int idPedido;
     private LocalDateTime fechaHora;
@@ -42,5 +43,13 @@ public class BitacoraEstatus {
 
     public void setNombreCliente(String nombreCliente) { 
         this.nombreCliente = nombreCliente; 
+    }
+
+    public String getNombreEmpleado() {
+        return nombreEmpleado;
+    }
+
+    public void setNombreEmpleado(String nombreEmpleado) {
+        this.nombreEmpleado = nombreEmpleado;
     }
 }

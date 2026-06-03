@@ -50,7 +50,7 @@ public class LoginController {
             Sesion.getInstance().setEmpleadoActual(empleado);
             abrirMenuPrincipal();
         } catch (Exception e) {
-            e.printStackTrace(); // Imprime el error completo en la consola
+            e.printStackTrace(); 
 
             Alerta.error("Error de conexión", "No se pudo conectar con la base de datos.\n" + e.getMessage());
         }

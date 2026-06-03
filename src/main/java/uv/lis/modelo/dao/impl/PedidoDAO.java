@@ -20,14 +20,12 @@ public class PedidoDAO implements IPedidoDAO {
         Connection conn = getConn();
         conn.setAutoCommit(false);
         try {
-            // Obtener idTipoEstatus "En proceso"
             int idEstatus;
             try (PreparedStatement ps = conn.prepareStatement(
                     "SELECT idTipoEstatus FROM TipoEstatus WHERE nombreEstatus='En proceso' LIMIT 1");
                  ResultSet rs = ps.executeQuery()) {
                 rs.next(); idEstatus = rs.getInt(1);
             }
-            // Insertar pedido
             String sqlP = "INSERT INTO Pedido (fechaHoraPedido,estatusActual,Cliente_idCliente," +
                           "Empleado_idEmpleado,MetodoPago_idMetodo,TipoPedido_idTipoPedido,TipoEstatus_idTipoEstatus) " +
                           "VALUES (NOW(),?,?,?,?,?,?)";
@@ -42,7 +40,6 @@ public class PedidoDAO implements IPedidoDAO {
                 ps.executeUpdate();
                 try (ResultSet rk = ps.getGeneratedKeys()) { rk.next(); idPedido = rk.getInt(1); }
             }
-            // Insertar detalles
             for (DetallePedido d : pedido.getDetalles()) {
                 try (PreparedStatement ps = conn.prepareStatement(
                         "INSERT INTO DetallePedido (Producto_idProducto,Pedido_idPedido,cantidadProductos,subtotal) VALUES (?,?,?,?)")) {
@@ -53,7 +50,6 @@ public class PedidoDAO implements IPedidoDAO {
                     ps.executeUpdate();
                 }
             }
-            // Primera bitácora
             int idBitacora;
             try (PreparedStatement ps = conn.prepareStatement(
                     "SELECT idEstatus FROM BitacoraEstatus WHERE nombreEstatus='Pedido creado' LIMIT 1");
@@ -103,10 +99,6 @@ public class PedidoDAO implements IPedidoDAO {
 
     @Override
     public boolean cambiarEstatus(int idPedido, String nuevoEstatus, int idEmpleado) throws Exception {
-        // Se delega en el procedimiento almacenado sp_cambiar_estatus_pedido:
-        // actualiza el estatus del pedido Y registra la bitacora dentro de una
-        // sola transaccion del lado del servidor. El SP comunica el resultado
-        // mediante el parametro de salida p_mensaje.
         String llamada = "{ CALL sp_cambiar_estatus_pedido(?, ?, ?, ?) }";
         try (CallableStatement cs = getConn().prepareCall(llamada)) {
             cs.setInt(1, idPedido);
@@ -210,8 +202,7 @@ public class PedidoDAO implements IPedidoDAO {
 
     @Override
     public List<Pedido> reportePedidos(Integer idCliente, LocalDate fecha, String estatus) throws Exception {
-        // Busqueda parametrizada delegada al procedimiento sp_reporte_pedidos.
-        // Cualquiera de los tres filtros puede ir en NULL y el SP lo ignora.
+
         List<Pedido> lista = new ArrayList<>();
         String llamada = "{ CALL sp_reporte_pedidos(?, ?, ?) }";
         try (CallableStatement cs = getConn().prepareCall(llamada)) {

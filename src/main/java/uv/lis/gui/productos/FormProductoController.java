@@ -10,14 +10,16 @@ import uv.lis.modelo.dominio.Producto;
 
 public class FormProductoController {
 
-    @FXML private Label     lblTitulo;
-    @FXML private TextField txtNombre, txtDescripcion, txtRestricciones;
+    @FXML private Label lblTitulo;
+    @FXML private TextField txtNombre;
+    @FXML private TextField txtDescripcion;
+    @FXML private TextField txtRestricciones;
     @FXML private TextField txtPrecio, txtCantidad;
     @FXML private CheckBox  chkPreparado;
-    @FXML private Label     lblError;
+    @FXML private Label lblError;
 
-    private Producto        producto;
-    private boolean         editando = false;
+    private Producto producto;
+    private boolean editando = false;
     private final ProductoDAO dao = new ProductoDAO();
 
     public void setProducto(Producto p) {
@@ -34,7 +36,8 @@ public class FormProductoController {
     }
 
     @FXML private void onGuardar(ActionEvent e) {
-        if (!validar()) return;
+        if (!validar()) 
+            return;
         try {
             Producto p = editando ? producto : new Producto();
             p.setNombre(txtNombre.getText().trim());
@@ -45,14 +48,16 @@ public class FormProductoController {
             p.setEsPreparado(chkPreparado.isSelected() ? 1 : 0);
 
             if (editando) dao.actualizar(p);
-            else          dao.registrar(p);
+            else dao.registrar(p);
 
             Alerta.info("Éxito", "Producto " + (editando ? "actualizado" : "registrado") + " correctamente.");
             ((Stage) txtNombre.getScene().getWindow()).close();
         } catch (Exception ex) { lblError.setText(ex.getMessage()); }
     }
 
-    @FXML private void onCancelar(ActionEvent e) { ((Stage) txtNombre.getScene().getWindow()).close(); }
+    @FXML private void onCancelar(ActionEvent e) { 
+        ((Stage) txtNombre.getScene().getWindow()).close(); 
+    }
 
     private boolean validar() {
         if (txtNombre.getText().isBlank() || txtPrecio.getText().isBlank()) {

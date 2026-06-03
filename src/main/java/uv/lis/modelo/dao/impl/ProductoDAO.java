@@ -16,8 +16,8 @@ public class ProductoDAO implements IProductoDAO {
 
     @Override
     public boolean registrar(Producto p) throws Exception {
-        String sql = "INSERT INTO Producto (nombre,descripcion,restricciones,disponible,precio,cantidad,foto,esPreparado,esInsumo) " +
-                     "VALUES (?,?,?,1,?,?,?,?,?)";
+        String sql = "INSERT INTO Producto (nombre,descripcion,restricciones,disponible,precio,cantidad,foto,esPreparado,esInsumo) "
+                + "VALUES (?,?,?,1,?,?,?,?,?)";
         try (PreparedStatement ps = getConn().prepareStatement(sql)) {
             ps.setString(1, p.getNombre());
             ps.setString(2, p.getDescripcion());
@@ -35,8 +35,8 @@ public class ProductoDAO implements IProductoDAO {
 
     @Override
     public boolean actualizar(Producto p) throws Exception {
-        String sql = "UPDATE Producto SET nombre=?,descripcion=?,restricciones=?,precio=?,cantidad=?,foto=?,esPreparado=?,esInsumo=? " +
-                     "WHERE idProducto=?";
+        String sql = "UPDATE Producto SET nombre=?,descripcion=?,restricciones=?,precio=?,cantidad=?,foto=?,esPreparado=?,esInsumo=? "
+                + "WHERE idProducto=?";
         try (PreparedStatement ps = getConn().prepareStatement(sql)) {
             ps.setString(1, p.getNombre());
             ps.setString(2, p.getDescripcion());
@@ -55,8 +55,9 @@ public class ProductoDAO implements IProductoDAO {
 
     @Override
     public boolean eliminarLogico(int idProducto) throws Exception {
-        if (estaEnPedidos(idProducto))
+        if (estaEnPedidos(idProducto)) {
             throw new Exception("El producto ya ha sido utilizado en pedidos y no puede eliminarse.");
+        }
         try (PreparedStatement ps = getConn().prepareStatement(
                 "UPDATE Producto SET disponible = 0 WHERE idProducto = ?")) {
             ps.setInt(1, idProducto);
@@ -97,11 +98,16 @@ public class ProductoDAO implements IProductoDAO {
         List<Producto> lista = new ArrayList<>();
         try (PreparedStatement ps = getConn().prepareStatement(sql)) {
             if (param != null) {
-                try { ps.setInt(1, Integer.parseInt(param)); }
-                catch (NumberFormatException e) { ps.setString(1, param); }
+                try {
+                    ps.setInt(1, Integer.parseInt(param));
+                } catch (NumberFormatException e) {
+                    ps.setString(1, param);
+                }
             }
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) lista.add(mapProducto(rs));
+                while (rs.next()) {
+                    lista.add(mapProducto(rs));
+                }
             }
         }
         return lista;

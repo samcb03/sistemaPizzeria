@@ -6,10 +6,10 @@ import java.sql.SQLException;
 
 public class ConexionBD {
 
-    private static final String HOST     = "localhost";
-    private static final int    PORT     = 3306;
-    private static final String DB       = "italia_pizza";
-    private static final String USUARIO  = "admin_pizza";
+    private static final String HOST = "localhost";
+    private static final int PORT = 3306;
+    private static final String DB = "italia_pizza";
+    private static final String USUARIO = "admin_pizza";
     private static final String PASSWORD = "pizza_ita23";
 
     private static final String URL = "jdbc:mysql://" + HOST + ":" + PORT + "/" + DB;
@@ -17,10 +17,13 @@ public class ConexionBD {
     private static ConexionBD instancia;
     private Connection conexion;
 
-    private ConexionBD() {}
+    private ConexionBD() {
+    }
 
     public static ConexionBD getInstancia() {
-        if (instancia == null) instancia = new ConexionBD();
+        if (instancia == null) {
+            instancia = new ConexionBD();
+        }
         return instancia;
     }
 
@@ -41,9 +44,13 @@ public class ConexionBD {
 
     public static void cerrarConexion() {
         if (instancia != null && instancia.conexion != null) {
-            try { instancia.conexion.close(); }
-            catch (SQLException e) { System.err.println("Error al cerrar: " + e.getMessage()); }
-            finally { instancia.conexion = null; }
+            try {
+                instancia.conexion.close();
+            } catch (SQLException e) {
+                System.err.println("Error al cerrar: " + e.getMessage());
+            } finally {
+                instancia.conexion = null;
+            }
         }
     }
 }

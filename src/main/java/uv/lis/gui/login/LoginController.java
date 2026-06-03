@@ -50,9 +50,9 @@ public class LoginController {
             Sesion.getInstance().setEmpleadoActual(empleado);
             abrirMenuPrincipal();
         } catch (Exception e) {
-            e.printStackTrace(); 
+            e.printStackTrace();
 
-            Alerta.error("Error de conexión", "No se pudo conectar con la base de datos.\n" + e.getMessage());
+            Alerta.error("Error de conexion", "No se pudo conectar con la base de datos.\n" + e.getMessage());
         }
     }
 
@@ -69,7 +69,7 @@ public class LoginController {
         stage.setScene(new Scene(root));
         stage.setResizable(true);
         stage.setMaximized(true);
-        stage.setTitle("Italia Pizza — Panel de Administración");
+        stage.setTitle("Italia Pizza — Panel de Administracion");
     }
 
 }

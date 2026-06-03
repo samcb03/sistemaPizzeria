@@ -4,6 +4,7 @@ import uv.lis.modelo.dominio.Cliente;
 import java.util.List;
 
 public interface IClienteDAO {
+
     boolean registrar(Cliente cliente, String telefono, String email) throws Exception;
     boolean actualizar(Cliente cliente, String telefono, String email) throws Exception;
     boolean eliminarLogico(int idCliente, int idSesion) throws Exception;
@@ -12,4 +13,5 @@ public interface IClienteDAO {
     List<Cliente> buscarPorTelefono(String telefono) throws Exception;
     List<Cliente> buscarPorDireccion(String direccion) throws Exception;
     Cliente buscarPorId(int idCliente) throws Exception;
+    
 }

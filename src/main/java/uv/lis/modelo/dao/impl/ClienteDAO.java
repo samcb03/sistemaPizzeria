@@ -191,27 +191,4 @@ public class ClienteDAO implements IClienteDAO {
         }
         return lista;
     }
-
-public List<Cliente> buscarPorTermino(String termino) throws SQLException {
-        String sql = "{CALL sp_buscar_clientes(?)}";
-        List<Cliente> lista = new ArrayList<>();
-
-        // Optimización: try-with-resources estandarizado con getConn()
-        try (Connection conn = getConn(); CallableStatement cs = conn.prepareCall(sql)) {
-            cs.setString(1, termino);
-            try (ResultSet rs = cs.executeQuery()) {
-                while (rs.next()) {
-                    Cliente c = new Cliente();
-                    
-                    // Corrección: Asignamos el ID extraído de la consulta al IdUsuario
-                    c.setIdUsuario(rs.getInt("idCliente")); 
-                    
-                    c.setNombre(rs.getString("nombreCompleto"));
-                    c.setTelefono(rs.getString("telefono"));
-                    lista.add(c);
-                }
-            }
-        }
-        return lista;
-    }
 }

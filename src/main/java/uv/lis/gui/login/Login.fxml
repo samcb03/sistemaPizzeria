@@ -22,7 +22,7 @@
                style="-fx-font-size: 13px; -fx-text-fill: white; -fx-text-alignment: center;"
                wrapText="true" textAlignment="CENTER"/>
         <Region VBox.vgrow="ALWAYS"/>
-        <Label text="FEI-UV • 2025"
+        <Label text="FEI-UV • 2026"
                style="-fx-font-size: 11px; -fx-text-fill: rgba(255,255,255,0.6);"/>
     </VBox>
 

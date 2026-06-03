@@ -32,8 +32,9 @@
         <Label text="Historial de Estatus" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
         <TableView fx:id="tblBitacora" prefHeight="120">
             <columns>
-                <TableColumn fx:id="colBEstatus" text="Estatus" prefWidth="140"/>
-                <TableColumn fx:id="colBFecha"   text="Fecha/Hora" prefWidth="200"/>
+                <TableColumn fx:id="colBEstatus"  text="Estatus" prefWidth="120"/>
+                <TableColumn fx:id="colBFecha"    text="Fecha/Hora" prefWidth="170"/>
+                <TableColumn fx:id="colBEmpleado" text="Empleado" prefWidth="180"/>
             </columns>
         </TableView>
     </VBox>

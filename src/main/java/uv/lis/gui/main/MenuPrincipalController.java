@@ -16,6 +16,7 @@ public class MenuPrincipalController {
     @FXML private Label lblUsuario;
     @FXML private Label lblRol;
     @FXML private MenuItem miUsuarios;
+    @FXML private Menu menuInventarios;
     @FXML private MenuItem miCerrarSesion;
 
     @FXML
@@ -25,11 +26,10 @@ public class MenuPrincipalController {
             lblUsuario.setText(emp.getNombreCompleto());
             lblRol.setText(emp.getRol().getNombreRol());
         }
-        // Si es cajero, ocultar administración
         if (!Sesion.getInstance().esAdministrador()) {
             miUsuarios.setDisable(true);
+            menuInventarios.setDisable(true);
         }
-        // Cargar dashboard por defecto
         cargarVista("/uv/lis/gui/pedidos/Pedidos.fxml");
     }
 
@@ -46,7 +46,7 @@ public class MenuPrincipalController {
             "Equipo de Desarrollo:\nAlvarez Villalobos Emilio, \n Carreto Barrientos Samuel, \n Juarez Reyes Denisse Yamileth, \n Martinez Lopez Alan\n\n" +
             "Ingeniería de Software • 4° Semestre\n" +
             "Facultad de Estadística e Informática\n" +
-            "Universidad Veracruzana • 2025");
+            "Universidad Veracruzana • 2026");
     }
 
     @FXML

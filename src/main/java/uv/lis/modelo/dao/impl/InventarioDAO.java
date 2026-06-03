@@ -32,11 +32,12 @@ public class InventarioDAO implements IInventarioDAO {
             }
             for (InventarioDetalle d : detalles) {
                 try (PreparedStatement ps = conn.prepareStatement(
-                        "INSERT INTO InventarioTieneProducto (Inventario_idInventario,Producto_idProducto,cantidadEnSistema,descripcion) VALUES (?,?,?,?)")) {
+                        "INSERT INTO InventarioTieneProducto (Inventario_idInventario,Producto_idProducto,cantidadEnSistema,cantidadReportada,descripcion) VALUES (?,?,?,?,?)")) {
                     ps.setInt(1, idInventario);
                     ps.setInt(2, d.getIdProducto());
-                    ps.setInt(3, d.getCantidadSistema());
-                    ps.setString(4, d.getDescripcion());
+                    ps.setInt(3, d.getCantidadSistema());      // lo que el sistema cree tener
+                    ps.setInt(4, d.getCantidadReal());         // lo que el empleado conto fisicamente
+                    ps.setString(5, d.getDescripcion());
                     ps.executeUpdate();
                 }
             }

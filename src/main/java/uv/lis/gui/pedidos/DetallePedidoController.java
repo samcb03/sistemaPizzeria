@@ -150,12 +150,12 @@ public class DetallePedidoController {
                 .filter(d -> d.getIdProducto() == prod.getIdProducto())
                 .findFirst()
                 .ifPresentOrElse(
-                    d -> {
+                    d -> {                                     
                         int nueva = d.getCantidadProductos() + cant;
                         d.setCantidadProductos(nueva);
-                        d.setSubtotal(d.getPrecioUnitario() * nueva); 
+                        d.setSubtotal(d.getPrecioUnitario() * nueva);
                     },
-                    () -> {
+                    () -> {                                      
                         DetallePedido d = new DetallePedido();
                         d.setIdProducto(prod.getIdProducto());
                         d.setNombreProducto(prod.getNombre());
@@ -166,6 +166,7 @@ public class DetallePedidoController {
                     });
 
         tblDetalle.setItems(FXCollections.observableArrayList(detallesTemp));
+        tblDetalle.refresh();  
         actualizarTotal();
     }
 

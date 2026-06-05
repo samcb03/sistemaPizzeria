@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 import uv.lis.gui.util.Alerta;
 import uv.lis.modelo.dao.impl.ClienteDAO;
 import uv.lis.modelo.dominio.Cliente;
-import uv.lis.modelo.excepciones.ValidacionException; 
+import uv.lis.modelo.excepciones.ValidacionException;
 
 public class FormClienteController {
 
@@ -20,6 +20,23 @@ public class FormClienteController {
     private Cliente  cliente;
     private boolean  editando = false;
     private final ClienteDAO dao = new ClienteDAO();
+    
+    @FXML
+    private void initialize() {
+        StringBuilder faltantes = new StringBuilder();
+        if (txtNombre      == null) faltantes.append("txtNombre ");
+        if (txtApellidoPat == null) faltantes.append("txtApellidoPat ");
+        if (txtApellidoMat == null) faltantes.append("txtApellidoMat ");
+        if (txtCiudad      == null) faltantes.append("txtCiudad ");
+        if (txtTelefono    == null) faltantes.append("txtTelefono ");
+        if (txtEmail       == null) faltantes.append("txtEmail ");
+        if (txtColonia     == null) faltantes.append("txtColonia ");
+        if (txtCalleNum    == null) faltantes.append("txtCalleNum ");
+        if (txtCP          == null) faltantes.append("txtCP ");
+        if (faltantes.length() > 0)
+            throw new IllegalStateException(
+                "fx:id no inyectados (revisa el FXML): " + faltantes.toString().trim());
+    }
 
     public void setCliente(Cliente cliente) {
         this.cliente  = cliente;
@@ -33,13 +50,15 @@ public class FormClienteController {
             txtCalleNum.setText(String.valueOf(cliente.getCalleNumero()));
             txtColonia.setText(cliente.getColonia());
             txtCP.setText(String.valueOf(cliente.getCodigoPostal()));
+            txtTelefono.setText(cliente.getTelefono() != null ? cliente.getTelefono() : "");
+            txtEmail.setText(cliente.getEmail()       != null ? cliente.getEmail()    : "");
         }
     }
 
     @FXML
     private void onGuardar(ActionEvent event) {
         try {
-            validar();  
+            validar();
             Cliente c = editando ? cliente : new Cliente();
             c.setNombre(txtNombre.getText().trim());
             c.setApellidoPaterno(txtApellidoPat.getText().trim());
@@ -55,16 +74,18 @@ public class FormClienteController {
             Alerta.info("Éxito", "Cliente " + (editando ? "actualizado" : "registrado") + " correctamente.");
             cerrar();
         } catch (ValidacionException ve) {
-            lblError.setText(ve.getMessage()); 
+            lblError.setText(ve.getMessage());
+            ve.printStackTrace();
         } catch (Exception e) {
             lblError.setText(e.getMessage());
+            e.printStackTrace();
         }
     }
 
     @FXML
     private void onCancelar(ActionEvent event) { cerrar(); }
 
-    private void validar() throws ValidacionException { 
+    private void validar() throws ValidacionException {
         if (txtNombre.getText().isBlank())
             throw new ValidacionException("Nombre", "El nombre es obligatorio.");
         if (txtApellidoPat.getText().isBlank())

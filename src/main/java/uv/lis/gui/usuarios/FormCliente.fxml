@@ -16,9 +16,9 @@
         <Label text="Nombre *"            GridPane.rowIndex="0" GridPane.columnIndex="0"/>
         <TextField fx:id="txtNombre"      GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="200"/>
         <Label text="Ap. Paterno *"        GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-        <TextField fx:id="txtApPat"       GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        <TextField fx:id="txtApellidoPat"       GridPane.rowIndex="1" GridPane.columnIndex="1"/>
         <Label text="Ap. Materno *"        GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-        <TextField fx:id="txtApMat"       GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        <TextField fx:id="txtApellidoMat"       GridPane.rowIndex="2" GridPane.columnIndex="1"/>
         <Label text="Ciudad *"             GridPane.rowIndex="3" GridPane.columnIndex="0"/>
         <TextField fx:id="txtCiudad"      GridPane.rowIndex="3" GridPane.columnIndex="1"/>
         <Label text="Teléfono *"           GridPane.rowIndex="4" GridPane.columnIndex="0"/>

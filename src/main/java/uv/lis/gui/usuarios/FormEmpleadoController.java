@@ -20,9 +20,9 @@ public class FormEmpleadoController {
     @FXML
     private TextField txtNombre;
     @FXML
-    private TextField txtApellidoPaterno;
+    private TextField txtApellidoPat;
     @FXML
-    private TextField txtApellidoMaterno;
+    private TextField txtApellidoMat;
     @FXML
     private TextField txtCiudad;
     @FXML
@@ -62,8 +62,8 @@ public class FormEmpleadoController {
         if (editando) {
             lblTitulo.setText("Editar Empleado");
             txtNombre.setText(e.getNombre());
-            txtApellidoPaterno.setText(e.getApellidoPaterno());
-            txtApellidoMaterno.setText(e.getApellidoMaterno());
+            txtApellidoPat.setText(e.getApellidoPaterno());
+            txtApellidoMat.setText(e.getApellidoMaterno());
             txtCiudad.setText(e.getCiudad());
             txtUsername.setText(e.getUsername());
             txtPass.setPromptText("Dejar vacio para no cambiar");
@@ -81,8 +81,8 @@ public class FormEmpleadoController {
         try {
             Empleado emp = editando ? empleado : new Empleado();
             emp.setNombre(txtNombre.getText().trim());
-            emp.setApellidoPaterno(txtApellidoPaterno.getText().trim());
-            emp.setApellidoMaterno(txtApellidoMaterno.getText().trim());
+            emp.setApellidoPaterno(txtApellidoPat.getText().trim());
+            emp.setApellidoMaterno(txtApellidoMat.getText().trim());
             emp.setCiudad(txtCiudad.getText().trim());
             emp.setUsername(txtUsername.getText().trim());
             emp.setRol(cbRol.getValue());
@@ -109,7 +109,7 @@ public class FormEmpleadoController {
     }
 
     private boolean validar() {
-        if (txtNombre.getText().isBlank() || txtApellidoPaterno.getText().isBlank()
+        if (txtNombre.getText().isBlank() || txtApellidoPat.getText().isBlank()
                 || txtUsername.getText().isBlank() || cbRol.getValue() == null) {
             lblError.setText("Todos los campos marcados con * son obligatorios.");
             return false;

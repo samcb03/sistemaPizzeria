@@ -3,6 +3,7 @@ package uv.lis.modelo.dao.impl;
 import uv.lis.modelo.conexion.ConexionBD;
 import uv.lis.modelo.dao.contratos.IProductoDAO;
 import uv.lis.modelo.dominio.Producto;
+import uv.lis.modelo.excepciones.ValidacionException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,43 +16,51 @@ public class ProductoDAO implements IProductoDAO {
     }
 
     @Override
-    public boolean registrar(Producto p) throws Exception {
-        String sql = "INSERT INTO Producto (nombre,descripcion,restricciones,disponible,precio,cantidad,foto,esPreparado,esInsumo) "
-                + "VALUES (?,?,?,1,?,?,?,?,?)";
-        try (PreparedStatement ps = getConn().prepareStatement(sql)) {
-            ps.setString(1, p.getNombre());
-            ps.setString(2, p.getDescripcion());
-            ps.setString(3, p.getRestricciones());
-            ps.setDouble(4, p.getPrecio());
-            ps.setInt(5, p.getCantidad());
-            ps.setString(6, p.getFoto());
-            ps.setInt(7, p.getEsPreparado());
-            ps.setInt(8, p.getEsInsumo());
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            throw new Exception("Error al registrar producto: " + e.getMessage(), e);
-        }
-    }
+        public boolean registrar(Producto p) throws Exception {
+            if (p.getPrecio() < 0 || p.getCantidad() < 0) {
+                throw new ValidacionException("El precio y la cantidad no pueden ser negativos.");
+            }
 
-    @Override
-    public boolean actualizar(Producto p) throws Exception {
-        String sql = "UPDATE Producto SET nombre=?,descripcion=?,restricciones=?,precio=?,cantidad=?,foto=?,esPreparado=?,esInsumo=? "
-                + "WHERE idProducto=?";
-        try (PreparedStatement ps = getConn().prepareStatement(sql)) {
-            ps.setString(1, p.getNombre());
-            ps.setString(2, p.getDescripcion());
-            ps.setString(3, p.getRestricciones());
-            ps.setDouble(4, p.getPrecio());
-            ps.setInt(5, p.getCantidad());
-            ps.setString(6, p.getFoto());
-            ps.setInt(7, p.getEsPreparado());
-            ps.setInt(8, p.getEsInsumo());
-            ps.setInt(9, p.getIdProducto());
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            throw new Exception("Error al actualizar producto: " + e.getMessage(), e);
+            String sql = "INSERT INTO Producto (nombre,descripcion,restricciones,disponible,precio,cantidad,foto,esPreparado,esInsumo) "
+                    + "VALUES (?,?,?,1,?,?,?,?,?)";
+            try (PreparedStatement ps = getConn().prepareStatement(sql)) {
+                ps.setString(1, p.getNombre());
+                ps.setString(2, p.getDescripcion());
+                ps.setString(3, p.getRestricciones());
+                ps.setDouble(4, p.getPrecio());
+                ps.setInt(5, p.getCantidad());
+                ps.setString(6, p.getFoto());
+                ps.setInt(7, p.getEsPreparado());
+                ps.setInt(8, p.getEsInsumo());
+                return ps.executeUpdate() > 0;
+            } catch (SQLException e) {
+                throw new Exception("Error al registrar producto: " + e.getMessage(), e);
+            }
         }
-    }
+
+        @Override
+        public boolean actualizar(Producto p) throws Exception {
+            if (p.getPrecio() < 0 || p.getCantidad() < 0) {
+                throw new ValidacionException("El precio y la cantidad no pueden ser negativos.");
+            }
+
+            String sql = "UPDATE Producto SET nombre=?,descripcion=?,restricciones=?,precio=?,cantidad=?,foto=?,esPreparado=?,esInsumo=? "
+                    + "WHERE idProducto=?";
+            try (PreparedStatement ps = getConn().prepareStatement(sql)) {
+                ps.setString(1, p.getNombre());
+                ps.setString(2, p.getDescripcion());
+                ps.setString(3, p.getRestricciones());
+                ps.setDouble(4, p.getPrecio());
+                ps.setInt(5, p.getCantidad());
+                ps.setString(6, p.getFoto());
+                ps.setInt(7, p.getEsPreparado());
+                ps.setInt(8, p.getEsInsumo());
+                ps.setInt(9, p.getIdProducto());
+                return ps.executeUpdate() > 0;
+            } catch (SQLException e) {
+                throw new Exception("Error al actualizar producto: " + e.getMessage(), e);
+            }
+        }
 
     @Override
     public boolean eliminarLogico(int idProducto) throws Exception {

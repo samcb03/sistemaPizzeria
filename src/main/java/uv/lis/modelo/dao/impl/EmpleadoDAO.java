@@ -151,7 +151,7 @@ public class EmpleadoDAO implements IEmpleadoDAO {
         try (CallableStatement cs = getConn().prepareCall(llamada)) {
             cs.setInt(1, idEmpleado);
             cs.setInt(2, idSesion);
-            cs.registerOutParameter(3, Types.VARCHAR);          // OUT p_mensaje
+            cs.registerOutParameter(3, Types.VARCHAR); 
             cs.execute();
 
             String mensaje = cs.getString(3);

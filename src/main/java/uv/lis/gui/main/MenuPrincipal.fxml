@@ -5,6 +5,8 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
@@ -17,7 +19,14 @@
         <VBox>
             <MenuBar style="-fx-background-color: #C82429; -fx-padding: 2 0;">
                 <!-- Logo -->
-                <Menu style="-fx-text-fill: black -fx-font-weight: bold; -fx-font-size: 14px;" text="🍕 Italia Pizza" />
+                <Menu style="-fx-text-fill: black -fx-font-weight: bold; -fx-font-size: 14px;" text="Italia Pizza">
+               <graphic>
+                  <ImageView fitHeight="26.0" fitWidth="28.0">
+                     <image>
+                        <Image url="@../resources/images/logoPizza.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Menu>
 
                 <Menu style="-fx-text-fill: white;" text="Administración">
                     <MenuItem fx:id="miUsuarios" onAction="#onUsuarios" text="👥  Usuarios" />

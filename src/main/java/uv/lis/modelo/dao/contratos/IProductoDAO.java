@@ -12,5 +12,5 @@ public interface IProductoDAO {
     List<Producto> buscarPorNombre(String nombre) throws Exception;
     Producto buscarPorId(int idProducto) throws Exception;
     boolean estaEnPedidos(int idProducto) throws Exception;
-    
+    List<Producto> buscarDisponibles() throws Exception;
 }

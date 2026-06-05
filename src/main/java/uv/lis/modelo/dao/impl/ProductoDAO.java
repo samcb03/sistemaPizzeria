@@ -91,6 +91,11 @@ public class ProductoDAO implements IProductoDAO {
     }
 
     @Override
+    public List<Producto> buscarDisponibles() throws Exception {
+        return consulta("SELECT * FROM Producto WHERE disponible = 1 ORDER BY nombre", null);
+    }
+
+    @Override
     public List<Producto> buscarPorNombre(String nombre) throws Exception {
         return consulta("SELECT * FROM Producto WHERE LOWER(nombre) LIKE LOWER(?) ORDER BY nombre",
                 "%" + nombre + "%");

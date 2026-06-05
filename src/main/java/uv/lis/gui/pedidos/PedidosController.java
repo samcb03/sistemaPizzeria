@@ -164,4 +164,10 @@ public class PedidosController {
             cargar();
         } catch (Exception ex) { Alerta.error("Error", ex.getMessage()); }
     }
+
+    @FXML
+    private void onActualizar(ActionEvent e) {
+        txtBuscarCliente.clear();
+        cargar();
+    }
 }

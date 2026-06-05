@@ -11,6 +11,7 @@ import uv.lis.gui.util.Alerta;
 import uv.lis.gui.util.Sesion;
 import uv.lis.modelo.dao.impl.EmpleadoDAO;
 import uv.lis.modelo.dominio.Empleado;
+import uv.lis.modelo.excepciones.AutenticacionException;
 
 public class LoginController {
 
@@ -42,17 +43,15 @@ public class LoginController {
 
         try {
             Empleado empleado = empleadoDAO.autenticar(username, password);
-            if (empleado == null) {
-                mostrarError("Usuario o contraseña incorrectos.");
-                txtContrasena.clear();
-                return;
-            }
             Sesion.getInstance().setEmpleadoActual(empleado);
             abrirMenuPrincipal();
+        } catch (AutenticacionException ae) {
+            mostrarError(ae.getMessage());
+            txtContrasena.clear();
         } catch (Exception e) {
             e.printStackTrace();
-
-            Alerta.error("Error de conexion", "No se pudo conectar con la base de datos.\n" + e.getMessage());
+            Alerta.error("Error de conexión",
+                    "No se pudo conectar con la base de datos.\n" + e.getMessage());
         }
     }
 

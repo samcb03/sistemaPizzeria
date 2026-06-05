@@ -15,7 +15,6 @@ import uv.lis.gui.util.Alerta;
 import uv.lis.gui.util.CsvExporter;
 import uv.lis.modelo.dao.impl.ProductoDAO;
 import uv.lis.modelo.dominio.Producto;
-// Importamos la excepción personalizada
 import uv.lis.modelo.excepciones.ValidacionException; 
 
 import java.io.File;

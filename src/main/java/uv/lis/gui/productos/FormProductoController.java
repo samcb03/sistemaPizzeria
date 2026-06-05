@@ -85,28 +85,42 @@ public class FormProductoController {
     }
 
     private boolean validar() {
-        
-        String nom = txtNombre.getText() == null ? "" : txtNombre.getText();
-        String pre = txtPrecio.getText() == null ? "" : txtPrecio.getText();
-        String cant = txtCantidad.getText() == null ? "" : txtCantidad.getText();
+        String pre  = txtPrecio.getText()   == null ? "" : txtPrecio.getText().trim();
+        String cant = txtCantidad.getText() == null ? "" : txtCantidad.getText().trim();
 
-        if (txtNombre.getText().isBlank()) {
+        if (txtNombre.getText() == null || txtNombre.getText().isBlank()) {
             lblError.setText("El nombre del producto es obligatorio."); return false;
         }
-        if (txtPrecio.getText().isBlank()) {
+        if (pre.isBlank()) {
             lblError.setText("El precio es obligatorio."); return false;
         }
+        double precio;
         try {
-            Double.parseDouble(pre.trim());
+            precio = Double.parseDouble(pre);
         } catch (NumberFormatException ex) {
-            lblError.setText("El precio debe ser un numero.");
-            return false;
+            lblError.setText("El precio debe ser un número."); return false;
         }
+        if (precio < 0) {
+            lblError.setText("El precio no puede ser negativo."); return false;
+        }
+        if (precio > 99999) {
+            lblError.setText("El precio no puede superar 99999."); return false;
+        }
+
+        if (cant.isBlank()) {
+            lblError.setText("La cantidad es obligatoria."); return false;
+        }
+        int cantidad;
         try {
-            Integer.parseInt(cant.trim());
+            cantidad = Integer.parseInt(cant);
         } catch (NumberFormatException ex) {
-            lblError.setText("La cantidad debe ser un numero entero.");
-            return false;
+            lblError.setText("La cantidad debe ser un número entero."); return false;
+        }
+        if (cantidad < 0) {
+            lblError.setText("La cantidad no puede ser negativa."); return false;
+        }
+        if (cantidad > 99999) {
+            lblError.setText("La cantidad no puede superar 99999."); return false;
         }
 
         lblError.setText("");

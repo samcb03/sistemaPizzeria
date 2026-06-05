@@ -10,6 +10,7 @@ import uv.lis.gui.util.Alerta;
 import uv.lis.gui.util.Sesion;
 import uv.lis.modelo.dao.impl.*;
 import uv.lis.modelo.dominio.*;
+import uv.lis.modelo.excepciones.StockInsuficienteException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,7 +99,7 @@ public class DetallePedidoController {
 
     private void cargarProductosDisponibles() {
         try {
-            cbProductoAgregar.setItems(FXCollections.observableArrayList(productoDAO.buscarTodos()));
+            cbProductoAgregar.setItems(FXCollections.observableArrayList(productoDAO.buscarDisponibles()));
         } catch (Exception e) {
             Alerta.error("Error", e.getMessage());
         }
@@ -128,23 +129,42 @@ public class DetallePedidoController {
     private void onAgregarProducto(ActionEvent e) {
         Producto prod = cbProductoAgregar.getValue();
         if (prod == null) {
+            Alerta.advertencia("Selección", "Selecciona un producto para agregar.");
             return;
         }
         int cant = spnCantidad.getValue();
+
+        int yaEnPedido = detallesTemp.stream()
+                .filter(d -> d.getIdProducto() == prod.getIdProducto())
+                .mapToInt(DetallePedido::getCantidadProductos)
+                .sum();
+
+        if (esNuevo && (yaEnPedido + cant) > prod.getCantidad()) {
+            Alerta.advertencia("Stock insuficiente",
+                    "Solo hay " + prod.getCantidad() + " unidades de \"" + prod.getNombre()
+                    + "\".\nYa tienes " + yaEnPedido + " en el pedido.");
+            return;
+        }
+
         detallesTemp.stream()
                 .filter(d -> d.getIdProducto() == prod.getIdProducto())
                 .findFirst()
                 .ifPresentOrElse(
-                        d -> d.setCantidadProductos(d.getCantidadProductos() + cant),
-                        () -> {
-                            DetallePedido d = new DetallePedido();
-                            d.setIdProducto(prod.getIdProducto());
-                            d.setNombreProducto(prod.getNombre());
-                            d.setPrecioUnitario(prod.getPrecio());
-                            d.setCantidadProductos(cant);
-                            d.setSubtotal(prod.getPrecio() * cant);
-                            detallesTemp.add(d);
-                        });
+                    d -> {
+                        int nueva = d.getCantidadProductos() + cant;
+                        d.setCantidadProductos(nueva);
+                        d.setSubtotal(d.getPrecioUnitario() * nueva); 
+                    },
+                    () -> {
+                        DetallePedido d = new DetallePedido();
+                        d.setIdProducto(prod.getIdProducto());
+                        d.setNombreProducto(prod.getNombre());
+                        d.setPrecioUnitario(prod.getPrecio());
+                        d.setCantidadProductos(cant);
+                        d.setSubtotal(prod.getPrecio() * cant);
+                        detallesTemp.add(d);
+                    });
+
         tblDetalle.setItems(FXCollections.observableArrayList(detallesTemp));
         actualizarTotal();
     }
@@ -199,6 +219,8 @@ public class DetallePedidoController {
 
             ((Stage) tblDetalle.getScene().getWindow()).close();
 
+        } catch (StockInsuficienteException se) {
+            Alerta.advertencia("Stock insuficiente", se.getMessage());
         } catch (Exception ex) {
             Alerta.error("Error", ex.getMessage());
         }

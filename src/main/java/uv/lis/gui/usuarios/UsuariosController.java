@@ -252,4 +252,11 @@ public class UsuariosController {
             Alerta.error("Error", e.getMessage());
         }
     }
+
+    @FXML
+    private void onActualizar(ActionEvent e) {
+        txtBuscar.clear();
+        cargarClientes();
+        cargarEmpleados();
+    }
 }

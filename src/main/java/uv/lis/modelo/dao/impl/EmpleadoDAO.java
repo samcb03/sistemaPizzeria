@@ -4,6 +4,7 @@ import uv.lis.modelo.conexion.ConexionBD;
 import uv.lis.modelo.dao.contratos.IEmpleadoDAO;
 import uv.lis.modelo.dominio.Empleado;
 import uv.lis.modelo.dominio.Rol;
+import uv.lis.modelo.excepciones.AutenticacionException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -22,17 +23,22 @@ public class EmpleadoDAO implements IEmpleadoDAO {
                 + "FROM Empleado e "
                 + "INNER JOIN Usuario u ON e.idEmpleado = u.idUsuario "
                 + "INNER JOIN Rol r ON e.Rol_idRol = r.idRol "
-                + "WHERE e.username = ? AND e.contrasena = SHA2(?, 256) AND u.estatus = 1";
+                + "WHERE e.username = ? AND e.contrasena = SHA2(?, 256)";
         try (PreparedStatement ps = getConn().prepareStatement(sql)) {
             ps.setString(1, username);
             ps.setString(2, contrasena);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return mapEmpleado(rs);
+                if (!rs.next()) {
+                    throw new AutenticacionException(
+                            AutenticacionException.Motivo.CREDENCIALES_INCORRECTAS);
                 }
+                if (rs.getInt("estatus") == 0) {
+                    throw new AutenticacionException(
+                            AutenticacionException.Motivo.CUENTA_INACTIVA);
+                }
+                return mapEmpleado(rs);
             }
         }
-        return null;
     }
 
     @Override
@@ -141,8 +147,6 @@ public class EmpleadoDAO implements IEmpleadoDAO {
 
     @Override
     public boolean eliminarLogico(int idEmpleado, int idSesion) throws Exception {
-        // La regla de no autoeliminacion y la baja logica se delegan en el
-        // procedimiento almacenado sp_eliminar_usuario_logico.
         String llamada = "{ CALL sp_eliminar_usuario_logico(?, ?, ?) }";
         try (CallableStatement cs = getConn().prepareCall(llamada)) {
             cs.setInt(1, idEmpleado);

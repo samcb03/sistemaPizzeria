@@ -20,6 +20,8 @@
                   style="-fx-background-color: #F3F5F8; -fx-border-color: #E2E5EB;"/>
         <Button text="🔍 Buscar" onAction="#onBuscar" prefHeight="36"
                 style="-fx-background-color: #C82429; -fx-text-fill: white; -fx-background-radius: 8; -fx-cursor: hand;"/>
+        <Button text="🔄 Actualizar" onAction="#onActualizar" prefHeight="36"
+            style="-fx-background-color: #F3F5F8; -fx-border-color: #E2E5EB; -fx-background-radius: 8; -fx-cursor: hand;"/>
         <Region HBox.hgrow="ALWAYS"/>
         <Button text="+ Nuevo Cliente"  onAction="#onNuevoCliente" prefHeight="36"
                 style="-fx-background-color: #C82429; -fx-text-fill: white; -fx-background-radius: 8; -fx-cursor: hand;"/>

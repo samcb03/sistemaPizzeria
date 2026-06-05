@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 import uv.lis.gui.util.Alerta;
 import uv.lis.modelo.dao.impl.ClienteDAO;
 import uv.lis.modelo.dominio.Cliente;
-import uv.lis.modelo.excepciones.ValidacionException;  // ✅ corregido
+import uv.lis.modelo.excepciones.ValidacionException; 
 
 public class FormClienteController {
 

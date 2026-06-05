@@ -3,6 +3,8 @@ package uv.lis.modelo.dao.impl;
 import uv.lis.modelo.conexion.ConexionBD;
 import uv.lis.modelo.dao.contratos.IPedidoDAO;
 import uv.lis.modelo.dominio.*;
+import uv.lis.modelo.excepciones.StockInsuficienteException;
+import uv.lis.modelo.excepciones.ValidacionException;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -20,12 +22,35 @@ public class PedidoDAO implements IPedidoDAO {
         Connection conn = getConn();
         conn.setAutoCommit(false);
         try {
+            for (DetallePedido d : pedido.getDetalles()) {
+                String nombre;
+                int stock;
+                try (PreparedStatement ps = conn.prepareStatement(
+                        "SELECT nombre, cantidad FROM Producto WHERE idProducto = ? FOR UPDATE")) {
+                    ps.setInt(1, d.getIdProducto());
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (!rs.next()) {
+                            conn.rollback();
+                            throw new ValidacionException("Uno de los productos del pedido ya no existe.");
+                        }
+                        nombre = rs.getString("nombre");
+                        stock  = rs.getInt("cantidad");
+                    }
+                }
+                if (d.getCantidadProductos() > stock) {
+                    conn.rollback();
+                    throw new StockInsuficienteException(nombre, stock, d.getCantidadProductos());
+                }
+            }
+
             int idEstatus;
             try (PreparedStatement ps = conn.prepareStatement(
-                    "SELECT idTipoEstatus FROM TipoEstatus WHERE nombreEstatus='En proceso' LIMIT 1"); ResultSet rs = ps.executeQuery()) {
+                    "SELECT idTipoEstatus FROM TipoEstatus WHERE nombreEstatus='En proceso' LIMIT 1");
+                ResultSet rs = ps.executeQuery()) {
                 rs.next();
                 idEstatus = rs.getInt(1);
             }
+
             String sqlP = "INSERT INTO Pedido (fechaHoraPedido,estatusActual,Cliente_idCliente,"
                     + "Empleado_idEmpleado,MetodoPago_idMetodo,TipoPedido_idTipoPedido,TipoEstatus_idTipoEstatus) "
                     + "VALUES (NOW(),?,?,?,?,?,?)";
@@ -43,6 +68,7 @@ public class PedidoDAO implements IPedidoDAO {
                     idPedido = rk.getInt(1);
                 }
             }
+
             for (DetallePedido d : pedido.getDetalles()) {
                 try (PreparedStatement ps = conn.prepareStatement(
                         "INSERT INTO DetallePedido (Producto_idProducto,Pedido_idPedido,cantidadProductos,subtotal) VALUES (?,?,?,?)")) {
@@ -53,9 +79,11 @@ public class PedidoDAO implements IPedidoDAO {
                     ps.executeUpdate();
                 }
             }
+
             int idBitacora;
             try (PreparedStatement ps = conn.prepareStatement(
-                    "SELECT idEstatus FROM BitacoraEstatus WHERE nombreEstatus='Pedido creado' LIMIT 1"); ResultSet rs = ps.executeQuery()) {
+                    "SELECT idEstatus FROM BitacoraEstatus WHERE nombreEstatus='Pedido creado' LIMIT 1");
+                ResultSet rs = ps.executeQuery()) {
                 rs.next();
                 idBitacora = rs.getInt(1);
             }
@@ -66,8 +94,10 @@ public class PedidoDAO implements IPedidoDAO {
                 ps.setInt(3, pedido.getIdEmpleado());
                 ps.executeUpdate();
             }
+
             conn.commit();
             return idPedido;
+
         } catch (SQLException e) {
             conn.rollback();
             throw new Exception("Error al crear pedido: " + e.getMessage(), e);

@@ -90,9 +90,11 @@ public class FormProductoController {
         String pre = txtPrecio.getText() == null ? "" : txtPrecio.getText();
         String cant = txtCantidad.getText() == null ? "" : txtCantidad.getText();
 
-        if (nom.isBlank() || pre.isBlank()) {
-            lblError.setText("Nombre y precio son obligatorios.");
-            return false;
+        if (txtNombre.getText().isBlank()) {
+            lblError.setText("El nombre del producto es obligatorio."); return false;
+        }
+        if (txtPrecio.getText().isBlank()) {
+            lblError.setText("El precio es obligatorio."); return false;
         }
         try {
             Double.parseDouble(pre.trim());

@@ -15,24 +15,20 @@ import uv.lis.gui.util.Alerta;
 import uv.lis.gui.util.CsvExporter;
 import uv.lis.modelo.dao.impl.ProductoDAO;
 import uv.lis.modelo.dominio.Producto;
+// Importamos la excepción personalizada
+import uv.lis.modelo.excepciones.ValidacionException; 
 
 import java.io.File;
 import java.util.List;
 
 public class ProductosController {
 
-    @FXML
-    private TableView<Producto> tblProductos;
-    @FXML
-    private TableColumn<Producto, Integer> colId;
-    @FXML
-    private TableColumn<Producto, String> colNombre, colDescripcion;
-    @FXML
-    private TableColumn<Producto, Double> colPrecio;
-    @FXML
-    private TableColumn<Producto, Integer> colCantidad, colDisponible;
-    @FXML
-    private TextField txtBuscar;
+    @FXML private TableView<Producto> tblProductos;
+    @FXML private TableColumn<Producto, Integer> colId;
+    @FXML private TableColumn<Producto, String> colNombre, colDescripcion;
+    @FXML private TableColumn<Producto, Double> colPrecio;
+    @FXML private TableColumn<Producto, Integer> colCantidad, colDisponible;
+    @FXML private TextField txtBuscar;
 
     private final ProductoDAO dao = new ProductoDAO();
 
@@ -54,12 +50,10 @@ public class ProductosController {
                     setStyle("");
                     return;
                 }
-
                 if (item == 0) {
                     setText("Inactivo");
                     setStyle("-fx-text-fill: #C82429;");
-                }
-                else if (getTableView().getItems().get(getIndex()).getCantidad() <= 0) {
+                } else if (getTableView().getItems().get(getIndex()).getCantidad() <= 0) {
                     setText("Sin stock");
                     setStyle("-fx-text-fill: #F47F23;");
                 } else {
@@ -112,16 +106,17 @@ public class ProductosController {
             Alerta.advertencia("Seleccion", "Selecciona un producto.");
             return;
         }
-        if (!Alerta.confirmar("Eliminar Producto",
-                "¿Deseas desactivar el producto \"" + sel.getNombre() + "\"?")) {
+        if (!Alerta.confirmar("Eliminar Producto", "¿Deseas desactivar el producto \"" + sel.getNombre() + "\"?")) {
             return;
         }
         try {
             dao.eliminarLogico(sel.getIdProducto());
             Alerta.info("Exito", "Producto desactivado.");
             cargar();
+        } catch (ValidacionException ve) {
+            Alerta.error("Error de Regla de Negocio", ve.getMessage());
         } catch (Exception ex) {
-            Alerta.error("No se pudo eliminar", ex.getMessage());
+            Alerta.error("Error", ex.getMessage());
         }
     }
 
@@ -132,9 +127,7 @@ public class ProductosController {
         fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV", "*.csv"));
         fc.setInitialFileName("inventario_productos.csv");
         File archivo = fc.showSaveDialog(tblProductos.getScene().getWindow());
-        if (archivo == null) {
-            return;
-        }
+        if (archivo == null) return;
 
         try {
             CsvExporter.exportarProductos(tblProductos.getItems(), archivo.getAbsolutePath());
@@ -146,8 +139,7 @@ public class ProductosController {
 
     private void abrirForm(Producto producto) {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/uv/lis/gui/productos/FormProducto.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/uv/lis/gui/productos/FormProducto.fxml"));
             Parent root = loader.load();
             FormProductoController ctrl = loader.getController();
             ctrl.setProducto(producto);
@@ -157,7 +149,7 @@ public class ProductosController {
             dlg.setScene(new Scene(root));
             dlg.setResizable(false);
             dlg.showAndWait();
-            cargar(); // Esto recarga la tabla después de cerrar la ventanita
+            cargar();
         } catch (Exception ex) {
             Alerta.error("Error", ex.getMessage());
         }

@@ -100,6 +100,3 @@ exports/
 *.sql.bak
 backup/
 dumps/
-
-# Imágenes subidas (uploads)
-resources/imagenes_productos/uploads/
